@@ -1,0 +1,117 @@
+/* estilos.css */
+
+/* Importamos una fuente bonita de Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f4f6f9;
+    margin: 0;
+    padding: 0;
+    color: #333;
+}
+
+.wrapper {
+    display: flex;
+    width: 100%;
+    align-items: stretch;
+}
+
+/* --- Estilos del Menú Lateral (Sidebar) --- */
+.sidebar {
+    min-width: 250px;
+    max-width: 250px;
+    background: #2c3e50;
+    /* Un azul oscuro profesional */
+    color: #fff;
+    min-height: 100vh;
+    transition: all 0.3s;
+}
+
+.sidebar .sidebar-header {
+    padding: 20px;
+    background: #1a252f;
+    text-align: center;
+    font-size: 1.5em;
+}
+
+.sidebar ul.components {
+    padding: 20px 0;
+    border-bottom: 1px solid #47748b;
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100vh - 75px);
+}
+
+.sidebar ul li a[href*="logout.php"] {
+    margin-top: auto;
+    background-color: #c0392b;
+    color: #fff;
+}
+
+.sidebar ul li a[href*="logout.php"]:hover {
+    background-color: #e74c3c;
+}
+
+.sidebar ul p {
+    color: #fff;
+    padding: 10px;
+}
+
+.sidebar ul li a {
+    padding: 15px 20px;
+    font-size: 1.1em;
+    display: block;
+    color: #adb5bd;
+    /* Texto de enlaces un poco más suave */
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.sidebar ul li a:hover {
+    color: #ffffff;
+    background: #34495e;
+}
+
+.sidebar ul li.active>a,
+a[aria-expanded="true"] {
+    color: #fff;
+    background: #1a252f;
+}
+
+.sidebar ul li a i {
+    margin-right: 10px;
+    /* Espacio entre el ícono y el texto */
+}
+
+
+/* --- Estilos del Contenido Principal --- */
+#content {
+    width: 100%;
+    padding: 20px 40px;
+    min-height: 100vh;
+    transition: all 0.3s;
+}
+
+#content h1 {
+    color: #2c3e50;
+    margin-bottom: 30px;
+}
+
+.logo-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 70vh;
+    /* Centra el logo verticalmente */
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+.logo-container img {
+    max-width: 100%;
+    max-height: 300px;
+    height: auto;
+}

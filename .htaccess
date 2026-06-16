@@ -1,0 +1,11 @@
+DirectoryIndex index.php
+
+Options -Indexes
+RewriteEngine On
+
+RewriteBase /rma-app/adm-rma/
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+RewriteRule ^(.*)$ index.php?ruta=$1 [QSA,L]
