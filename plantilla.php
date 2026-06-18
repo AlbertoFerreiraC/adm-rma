@@ -84,7 +84,7 @@ $bodyClass = $esLogin
 <body class="<?= $bodyClass ?>">
 
     <?php if (!$esLogin): ?>
-            <div class="wrapper">
+        <div class="wrapper">
         <?php endif; ?>
 
 
@@ -133,7 +133,7 @@ $bodyClass = $esLogin
         ?>
 
         <?php if (!$esLogin): ?>
-            </div>
+        </div>
     <?php endif; ?>
 
 
