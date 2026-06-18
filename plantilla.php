@@ -13,7 +13,8 @@ $rutasPublicas = [
     "login",
     "forgot-password",
     "reset-password",
-    "register"
+    "register",
+    "perfil_tecnico"
 ];
 
 /* =========================
@@ -99,6 +100,10 @@ $bodyClass = $esLogin
 
             case "inicio":
                 include __DIR__ . "/vistas/modulos/inicio/inicio.php";
+                break;
+
+            case "perfil_tecnico":
+                include __DIR__ . "/vistas/modulos/tecnico/perfil_tecnico.php";
                 break;
 
             default:
