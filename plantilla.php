@@ -1,5 +1,7 @@
 <?php
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 /* =========================
    RUTA ACTUAL
@@ -13,8 +15,7 @@ $rutasPublicas = [
     "login",
     "forgot-password",
     "reset-password",
-    "register",
-    "perfil_tecnico"
+    "register"
 ];
 
 /* =========================
@@ -22,15 +23,34 @@ $rutasPublicas = [
 ========================= */
 $usuarioLogueado = isset($_SESSION["id"]);
 $esPublica = in_array($ruta, $rutasPublicas);
+$idRol = $_SESSION["id_rol"] ?? null;
 
 /* Forzar login */
-if (!$usuarioLogueado && !$esPublica && $ruta !== "login") {
+if (!$usuarioLogueado && !$esPublica) {
     $ruta = "login";
 }
 
-/* Evitar volver a login */
+/* Evitar volver a login si ya tiene sesión iniciada */
 if ($usuarioLogueado && $ruta === "login") {
-    $ruta = "dashboard";
+    if ((int) $idRol === 1) {
+        $ruta = "perfil_tecnico";
+    } else {
+        $ruta = "inicio";
+    }
+}
+
+/* ========================================================
+   RE-DIRECCIONAMIENTO AUTOMÁTICO EN LA RAÍZ O DEFENSA DE URL
+======================================================== */
+if ($usuarioLogueado) {
+    // Si intenta ir a 'inicio' pero es Técnico, forzar a su plantilla dedicada
+    if ((int) $idRol === 1 && $ruta === "inicio") {
+        $ruta = "perfil_tecnico";
+    }
+    // Si es Administrador e intenta ir a la vista del técnico, forzar a la pantalla global
+    if ((int) $idRol === 2 && $ruta === "perfil_tecnico") {
+        $ruta = "inicio";
+    }
 }
 
 $esLogin = ($ruta === "login");
@@ -64,7 +84,7 @@ $bodyClass = $esLogin
 <body class="<?= $bodyClass ?>">
 
     <?php if (!$esLogin): ?>
-        <div class="wrapper">
+            <div class="wrapper">
         <?php endif; ?>
 
 
@@ -113,7 +133,7 @@ $bodyClass = $esLogin
         ?>
 
         <?php if (!$esLogin): ?>
-        </div>
+            </div>
     <?php endif; ?>
 
 
