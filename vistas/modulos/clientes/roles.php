@@ -18,13 +18,29 @@ if (session_status() === PHP_SESSION_NONE) {
                 <div class="panel-cyber-header">
                     <h4><span class="purple-accent">//</span> DECLARAR NUEVO ROL</h4>
                 </div>
-                <form class="panel-cyber-body-stats font-mono mt-3" method="POST">
+                <form class="panel-cyber-body-stats font-mono mt-3" method="POST" id="formRol">
+                    <input type="hidden" name="id" value="">
+
                     <div class="cyber-form-group">
                         <label class="node-label">NOMBRE DEL ROL:</label>
-                        <input type="text" class="cyber-input" placeholder="EJ: SUPERVISOR" required>
+                        <input type="text" name="nombre" class="cyber-input" placeholder="EJ: SUPERVISOR" required>
                     </div>
+
+                    <div class="cyber-form-group">
+                        <label class="node-label">ESTADO DEL NODO:</label>
+                        <select name="estado" class="cyber-input" required>
+                            <option value="activo">1 - OPERATIVO (ACTIVO)</option>
+                            <option value="inactivo">0 - CORRUPTO (INACTIVO)</option>
+                        </select>
+                    </div>
+
                     <button type="submit" class="node-submit-btn text-neon-purple">
                         [INJECT_NEW_ROLE]
+                    </button>
+
+                    <button type="button" id="btnCancelarEdicion" class="node-submit-btn text-neon-purple mt-2"
+                        style="border-color: #506690; color: #506690; background: rgba(80,102,144,0.1); display:none;">
+                        [ABORT_UPDATE]
                     </button>
                 </form>
             </div>
@@ -39,23 +55,12 @@ if (session_status() === PHP_SESSION_NONE) {
                             <tr>
                                 <th>ID_ROL</th>
                                 <th>Nombre Rol</th>
-                                <th>Nivel de Acceso</th>
-                                <th>Estado del Nodo</th>
+                                <th>Estado</th>
+                                <th style="text-align: center;">Acciones [ABM]</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td class="t-cyan font-mono">1</td>
-                                <td class="neon-text-blue font-weight-bold">TÉCNICO</td>
-                                <td class="font-mono">Módulo 02, Módulo 03 (Parcial)</td>
-                                <td><span class="badge-status badge-diag">OPERATIVO</span></td>
-                            </tr>
-                            <tr>
-                                <td class="t-cyan font-mono">2</td>
-                                <td class="neon-text-purple font-weight-bold">ADMINISTRADOR</td>
-                                <td class="font-mono">Acceso Root Completo [01-04]</td>
-                                <td><span class="badge-status badge-ready">ROOT_ACTIVE</span></td>
-                            </tr>
+
                         </tbody>
                     </table>
                 </div>
@@ -165,6 +170,12 @@ if (session_status() === PHP_SESSION_NONE) {
         color: #fff;
         padding: 8px 12px;
         border-radius: 4px;
+        outline: none;
+    }
+
+    select.cyber-input option {
+        background: #060913;
+        color: #fff;
     }
 
     .node-submit-btn {
@@ -230,8 +241,48 @@ if (session_status() === PHP_SESSION_NONE) {
     }
 
     .badge-ready {
-        background: rgba(0, 255, 102, 0.1);
-        color: #00ff66;
-        border: 1px solid rgba(0, 255, 102, 0.2);
+        background: rgba(255, 0, 85, 0.1);
+        color: #ff0055;
+        border: 1px solid rgba(255, 0, 85, 0.2);
+    }
+
+    .btn-cyber-action {
+        font-family: 'Share Tech Mono', monospace;
+        font-size: 0.75rem;
+        padding: 4px 8px;
+        border: 1px solid transparent;
+        background: transparent;
+        cursor: pointer;
+        border-radius: 4px;
+        transition: all 0.2s;
+        margin: 0 3px;
+    }
+
+    .btn-edit {
+        color: #00f2ff;
+        border-color: rgba(0, 242, 255, 0.3);
+        background: rgba(0, 242, 255, 0.05);
+    }
+
+    .btn-edit:hover {
+        background: rgba(0, 242, 255, 0.2);
+        box-shadow: 0 0 8px rgba(0, 242, 255, 0.4);
+    }
+
+    .btn-delete {
+        color: #ff0055;
+        border-color: rgba(255, 0, 85, 0.3);
+        background: rgba(255, 0, 85, 0.05);
+    }
+
+    .btn-delete:hover {
+        background: rgba(255, 0, 85, 0.2);
+        box-shadow: 0 0 8px rgba(255, 0, 85, 0.4);
+    }
+
+    .mt-2 {
+        margin-top: 0.5rem;
     }
 </style>
+
+<script src="vistas/js/clientes/roles.js"></script>

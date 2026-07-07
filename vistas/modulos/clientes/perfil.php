@@ -18,26 +18,43 @@ if (session_status() === PHP_SESSION_NONE) {
                 <div class="panel-cyber-header">
                     <h4><span class="green-accent">//</span> MODIFICAR PERFIL / ACCESS_TOKEN</h4>
                 </div>
-                <form class="panel-cyber-body-stats font-mono mt-3" method="POST">
+
+                <form class="panel-cyber-body-stats font-mono mt-3" method="POST" id="formPerfil">
+                    <input type="hidden" name="id" id="perfilId" value="<?php echo $_SESSION['id'] ?? ''; ?>">
+
                     <div class="cyber-form-group">
                         <label class="node-label">USUARIO ACTUAL (NO MODIFICABLE):</label>
-                        <input type="text" class="cyber-input locked-node"
+                        <input type="text" id="perfilUsuario" class="cyber-input locked-node"
                             value="<?php echo $_SESSION['usuario'] ?? 'root_admin'; ?>" readonly>
                     </div>
+
                     <div class="cyber-form-group">
                         <label class="node-label">NOMBRE DEL OPERADOR:</label>
-                        <input type="text" class="cyber-input"
-                            value="<?php echo $_SESSION['nombre'] ?? 'Administrador'; ?>" style="color: #fff;">
+                        <input type="text" name="nombre" id="perfilNombre" class="cyber-input"
+                            value="<?php echo $_SESSION['nombre'] ?? 'Administrador'; ?>" required>
                     </div>
-                    <hr class="cyber-hr">
+
                     <div class="cyber-form-group">
-                        <label class="node-label text-yellow">// NUEVO PASSWORD:</label>
-                        <input type="password" class="cyber-input" placeholder="Ingresar nueva clave">
+                        <label class="node-label">CORREO ELECTRÓNICO (EMAIL):</label>
+                        <input type="email" name="email" id="perfilEmail" class="cyber-input"
+                            value="<?php echo $_SESSION['email'] ?? 'admin@matrix.com'; ?>" required>
                     </div>
+
+                    <hr class="cyber-hr">
+
+                    <div class="cyber-form-group">
+                        <label class="node-label text-yellow">// NUEVO PASSWORD (DEJAR VACÍO PARA MANTENER
+                            ACTUAL):</label>
+                        <input type="password" name="contrasena" id="perfilPassword" class="cyber-input"
+                            placeholder="Ingresar nueva clave">
+                    </div>
+
                     <div class="cyber-form-group">
                         <label class="node-label text-yellow">// CONFIRMAR NUEVO PASSWORD:</label>
-                        <input type="password" class="cyber-input" placeholder="Confirmar nueva clave">
+                        <input type="password" id="perfilConfirmPassword" class="cyber-input"
+                            placeholder="Confirmar nueva clave">
                     </div>
+
                     <button type="submit" class="node-submit-btn text-neon-green">
                         [UPDATE_SECURITY_HASH]
                     </button>
@@ -129,9 +146,12 @@ if (session_status() === PHP_SESSION_NONE) {
         width: 100%;
         background: #03050c;
         border: 1px solid #101c38;
+        color: #fff;
+        /* 🔥 FIX: Fuerza a que el texto (y los puntos del password) sean blancos */
         padding: 10px;
         border-radius: 4px;
         box-sizing: border-box;
+        outline: none;
     }
 
     .locked-node {
@@ -163,3 +183,5 @@ if (session_status() === PHP_SESSION_NONE) {
         box-shadow: 0 0 10px rgba(0, 255, 102, 0.4);
     }
 </style>
+
+<script src="vistas/js/clientes/perfil.js"></script>
