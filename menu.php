@@ -2,7 +2,6 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-// Forzamos la lectura del rol desde la sesión para las condicionales del HUD
 $id_rol = $_SESSION['id_rol'] ?? null;
 ?>
 
@@ -30,10 +29,11 @@ $id_rol = $_SESSION['id_rol'] ?? null;
                     <i class="fa fa-wrench"></i> [02] RMA_CORE
                 </a>
                 <ul class="dropdown-terminal">
-                    <li><a href="nuevo-caso"><span class="t-yellow">//</span> REGISTRO NUEVO</a></li>
-                    <li><a href="casos"><span class="t-yellow">//</span> BANDEJA DE CASOS</a></li>
+                    <li><a href="nuevoCaso"><span class="t-yellow">//</span> REGISTRO NUEVO</a></li>
+                    <li><a href="bandejaCasos"><span class="t-yellow">//</span> BANDEJA DE CASOS</a></li>
                     <li><a href="taller"><span class="t-yellow">//</span> DIAGNÓSTICO_LAB</a></li>
-                    <li><a href="proveedores-rma"><span class="t-yellow">//</span> FLUJO EXTERNO</a></li>
+                    <li><a href="proveedoresRma"><span class="t-yellow">//</span> FLUJO EXTERNO</a></li>
+                    <li><a href="historialEstado"><span class="t-yellow">//</span> HISTORIAL ESTADO</a></li>
                 </ul>
             </li>
         <?php endif; ?>

@@ -3,18 +3,12 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-header("Cache-Control: no-cache, no-store, must-revalidate"); // HTTP 1.1
-header("Pragma: no-cache"); // HTTP 1.0
-header("Expires: 0"); // Proxies
+header("Cache-Control: no-cache, no-store, must-revalidate");
+header("Pragma: no-cache");
+header("Expires: 0");
 
-/* =========================
-   RUTA ACTUAL
-========================= */
 $ruta = $_GET["ruta"] ?? $_GET["page"] ?? 'inicio';
 
-/* =========================
-   RUTAS PUBLICAS
-========================= */
 $rutasPublicas = [
     "login",
     "forgot-password",
@@ -22,36 +16,26 @@ $rutasPublicas = [
     "register"
 ];
 
-/* =========================
-   CONTROL DE ACCESO
-========================= */
 $usuarioLogueado = isset($_SESSION["id"]);
 $esPublica = in_array($ruta, $rutasPublicas);
-$idRol = isset($_SESSION["id_rol"]) ? (int) $_SESSION["id_rol"] : null; // Forzamos entero para evitar fallas de tipo
+$idRol = isset($_SESSION["id_rol"]) ? (int) $_SESSION["id_rol"] : null;
 
-/* Forzar login */
 if (!$usuarioLogueado && !$esPublica) {
     $ruta = "login";
 }
 
-/* Evitar volver a login si ya tiene sesión iniciada */
 if ($usuarioLogueado && $ruta === "login") {
-    if ($idRol === 1) { // Rol 1: Técnico
+    if ($idRol === 1) {
         $ruta = "perfil_tecnico";
-    } else { // Rol 2: Administrador u otros
+    } else {
         $ruta = "inicio";
     }
 }
 
-/* ========================================================
-   RE-DIRECCIONAMIENTO AUTOMÁTICO / DEFENSA DE URL
-======================================================== */
 if ($usuarioLogueado) {
-    // Si el Técnico intenta ingresar a la vista global 'inicio', forzar a su terminal técnico
     if ($idRol === 1 && $ruta === "inicio") {
         $ruta = "perfil_tecnico";
     }
-    // Si el Administrador intenta ingresar a la terminal del técnico, enviarlo al panel global
     if ($idRol === 2 && $ruta === "perfil_tecnico") {
         $ruta = "inicio";
     }
@@ -80,7 +64,6 @@ $esLogin = ($ruta === "login");
 </head>
 
 <?php
-// Mantenemos una clase limpia para que el login no herede el fondo oscuro del core analítico
 $bodyClass = $esLogin ? 'login-page' : 'hold-transition';
 ?>
 
@@ -96,9 +79,6 @@ $bodyClass = $esLogin ? 'login-page' : 'hold-transition';
         <?php endif; ?>
 
         <?php
-        /* =========================
-           ROUTER CENTRALIZADO (4 MÓDULOS)
-        ========================= */
         switch ($ruta) {
 
             case "login":
@@ -146,11 +126,21 @@ $bodyClass = $esLogin ? 'login-page' : 'hold-transition';
                 include __DIR__ . "/vistas/modulos/clientes/configuracion.php";
                 break;
 
-            // --- RUTAS FUTURAS CORRESPONDIENTES A LOS SUBMÓDULOS ---
-            case "nuevo-caso":
-            case "casos":
+            case "nuevoCaso":
+                include __DIR__ . "/vistas/modulos/rma-core/nuevoCaso.php";
+                break;
+            case "bandejaCasos":
+                include __DIR__ . "/vistas/modulos/rma-core/bandejaCasos.php";
+                break;
             case "taller":
-            case "proveedores-rma":
+                include __DIR__ . "/vistas/modulos/rma-core/taller.php";
+                break;
+            case "proveedoresRma":
+                include __DIR__ . "/vistas/modulos/rma-core/proveedoresRma.php";
+                break;
+            case "historialEstado":
+                include __DIR__ . "/vistas/modulos/rma-core/historialEstado.php";
+                break;
             case "clientes":
             case "proveedores":
             case "notificaciones":
@@ -159,7 +149,6 @@ $bodyClass = $esLogin ? 'login-page' : 'hold-transition';
             case "confiabilidad-producto":
             case "auditoria-proveedores":
             case "recurrencia-clientes":
-                // Aquí vas mapeando los includes a medida que crees los archivos correspondientes
                 include __DIR__ . "/vistas/modulos/inicio/inicio.php";
                 break;
 
