@@ -12,7 +12,7 @@ $(document).ready(function () {
             });
             return;
         }
-
+ 
         $.ajax({
             url: "../api-rma/sesiones/funLogin.php",
             type: "POST",
