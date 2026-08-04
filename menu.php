@@ -45,7 +45,7 @@ $id_rol = $_SESSION['id_rol'] ?? null;
                 </a>
                 <ul class="dropdown-terminal">
                     <li><a href="clientes"><span class="t-green">//</span> DIRECTORIO CLIENTES</a></li>
-                    <li><a href="proveedores"><span class="t-green">//</span> SERVICE OFICIAL</a></li>
+                    <li><a href="proveedores"><span class="t-green">//</span> DIRECTORIO PROVEEDORES</a></li>
                     <li><a href="notificaciones"><span class="t-green">//</span> ALERTAS WHATSAPP</a></li>
                 </ul>
             </li>

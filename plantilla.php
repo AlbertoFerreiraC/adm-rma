@@ -10,6 +10,7 @@ header("Expires: 0");
 $ruta = $_GET["ruta"] ?? $_GET["page"] ?? 'inicio';
 
 $rutasPublicas = [
+    "consulta",
     "login",
     "forgot-password",
     "reset-password",
@@ -142,8 +143,17 @@ $bodyClass = $esLogin ? 'login-page' : 'hold-transition';
                 include __DIR__ . "/vistas/modulos/rma-core/historialEstado.php";
                 break;
             case "clientes":
+                include __DIR__ . "/vistas/modulos/clientes/clientes.php";
+                break;
             case "proveedores":
+                include __DIR__ . "/vistas/modulos/clientes/proveedores.php";
+                break;
+            case "consulta":
+                include __DIR__ . "/vistas/modulos/publico/consulta.php";
+                break;
             case "notificaciones":
+                include __DIR__ . "/vistas/modulos/clientes/notificaciones.php";
+                break;
             case "sla-procesos":
             case "performance-tecnico":
             case "confiabilidad-producto":
