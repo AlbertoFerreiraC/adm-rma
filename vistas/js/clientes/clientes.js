@@ -1,25 +1,58 @@
 (function () {
-    console.log("⚡ [COMMS_NODE] Inicializando módulo de Directorio de Clientes...");
+    console.log("⚡ [COMMS_NODE] Inicializando módulo de Directorio de Clientes (Modo Modal Nativo)...");
 
-    const API_CLIENTES = "../api-rma/clientes/clientes.php";
+    const API_CLIENTES = "/rma-app/api-rma/clientes/clientes.php";
+
+    // Formulario y Modal Nativo
     const formCliente = document.getElementById("formCliente");
+    const modalOverlay = document.getElementById("modalClienteOverlay");
+    const btnCerrarModalX = document.getElementById("btnCerrarModalX");
+    const btnCancelarModal = document.getElementById("btnCancelarModal");
+    const lblTituloModal = document.getElementById("lblTituloModal");
+    const btnNuevoCliente = document.getElementById("btnNuevoCliente");
+
+    // Elementos de Tabla y Buscador
     const tablaClientesBody = document.querySelector("#tablaClientes tbody");
     const buscarClienteInput = document.getElementById("buscarCliente");
 
+    // Historial RMA
     const panelHistorial = document.getElementById("panelHistorialCliente");
     const labelClienteNombre = document.getElementById("labelClienteNombre");
     const labelClienteCedula = document.getElementById("labelClienteCedula");
     const tablaHistorialBody = document.querySelector("#tablaHistorialRma tbody");
 
+    // Campos del Formulario Modal
     const clienteIdInput = document.getElementById("cliente_id");
     const clienteNombreInput = document.getElementById("cliente_nombre");
     const clienteCedulaInput = document.getElementById("cliente_cedula");
     const clienteCelularInput = document.getElementById("cliente_celular");
     const btnGuardar = document.getElementById("btnGuardarCliente");
-    const btnCancelar = document.getElementById("btnCancelarEdicion");
 
     let listaClientesCache = [];
+    let esModoEdicion = false;
 
+    // ==========================================
+    // 🔓 APERTURA / CIERRE DE MODAL NATIVO
+    // ==========================================
+    function abrirModal() {
+        if (modalOverlay) {
+            modalOverlay.style.display = "flex";
+        }
+    }
+
+    function cerrarModal() {
+        if (modalOverlay) {
+            modalOverlay.style.display = "none";
+        }
+        limpiarFormulario();
+    }
+
+    if (btnCerrarModalX) btnCerrarModalX.addEventListener("click", cerrarModal);
+    if (btnCancelarModal) btnCancelarModal.addEventListener("click", cerrarModal);
+
+    // ==========================================
+    // 📡 1. CARGAR Y RENDERIZAR TABLA CLIENTES
+    // ==========================================
     async function cargarClientes() {
         if (!tablaClientesBody) return;
 
@@ -32,19 +65,22 @@
                 renderizarTablaClientes(listaClientesCache);
             } else {
                 console.warn("⚠️ Error en listado de clientes:", data.message);
+                tablaClientesBody.innerHTML = `<tr><td colspan="6" class="font-mono text-center">NO SE ENCONTRARON REGISTROS</td></tr>`;
             }
         } catch (error) {
             console.error("🔴 Fallo de conexión Fetch (Clientes):", error);
+            tablaClientesBody.innerHTML = `<tr><td colspan="6" class="font-mono text-center">ERROR DE CONEXIÓN AL SERVIDOR</td></tr>`;
         }
     }
 
     function renderizarTablaClientes(clientes) {
+        if (!tablaClientesBody) return;
         tablaClientesBody.innerHTML = "";
 
         if (clientes.length === 0) {
             tablaClientesBody.innerHTML = `
                 <tr>
-                    <td colspan="6" class="font-mono text-white">NO SE ENCONTRARON REGISTROS DE CLIENTES</td>
+                    <td colspan="6" class="font-mono text-center">NO SE ENCONTRARON REGISTROS DE CLIENTES</td>
                 </tr>`;
             return;
         }
@@ -53,10 +89,10 @@
             const fila = document.createElement("tr");
             fila.innerHTML = `
                 <td class="t-cyan font-mono">${cli.id}</td>
-                <td class="font-mono text-white">${cli.cedula}</td>
-                <td><strong>${cli.nombre}</strong></td>
-                <td class="font-mono">${cli.celular}</td>
-                <td class="font-mono">${cli.created_at}</td>
+                <td class="font-mono">${cli.cedula}</td>
+                <td><strong>${cli.nombre ? cli.nombre.toUpperCase() : ''}</strong></td>
+                <td class="font-mono">${cli.celular || 'S/N'}</td>
+                <td class="font-mono">${cli.created_at || 'N/A'}</td>
                 <td>
                     <button class="btn-terminal-view" data-id="${cli.id}" data-nombre="${cli.nombre}" data-cedula="${cli.cedula}" title="Ver Historial RMA">
                         <i class="fa fa-eye"></i> [TRAILS]
@@ -75,18 +111,24 @@
         AsignarEventosAcciones();
     }
 
+    // ==========================================
+    // 🔍 2. BUSCADOR EN TIEMPO REAL
+    // ==========================================
     if (buscarClienteInput) {
         buscarClienteInput.addEventListener("input", function () {
             const termino = this.value.toLowerCase().trim();
             const filtrados = listaClientesCache.filter(cli =>
-                cli.nombre.toLowerCase().includes(termino) ||
-                cli.cedula.toLowerCase().includes(termino) ||
-                cli.celular.toLowerCase().includes(termino)
+                (cli.nombre && cli.nombre.toLowerCase().includes(termino)) ||
+                (cli.cedula && cli.cedula.toLowerCase().includes(termino)) ||
+                (cli.celular && cli.celular.toLowerCase().includes(termino))
             );
             renderizarTablaClientes(filtrados);
         });
     }
 
+    // ==========================================
+    // 📥 3. MANEJADOR GUARDAR / ACTUALIZAR
+    // ==========================================
     const guardarClienteHandler = async function (e) {
         if (e) {
             e.preventDefault();
@@ -109,13 +151,13 @@
             if (resultado.status === "success") {
                 Swal.fire({
                     icon: 'success',
-                    title: esEdicion ? 'CLIENT_UPDATED' : 'CLIENT_REGISTERED',
+                    title: esEdicion ? 'NODO CLIENTE ACTUALIZADO' : 'NODO CLIENTE INYECTADO',
                     text: resultado.message,
-                    background: '#060b19',
-                    color: '#00ff66',
-                    confirmButtonColor: '#00b4d8'
+                    background: '#ffffff',
+                    color: '#0f172a',
+                    confirmButtonColor: '#0284c7'
                 });
-                limpiarFormulario();
+                cerrarModal();
                 cargarClientes();
             } else {
                 throw new Error(resultado.message);
@@ -125,46 +167,59 @@
                 icon: 'error',
                 title: 'OPERATIONAL_FAIL',
                 text: error.message,
-                background: '#060b19',
-                color: '#ff3333',
-                confirmButtonColor: '#ff3333'
+                background: '#ffffff',
+                color: '#dc2626',
+                confirmButtonColor: '#dc2626'
             });
         }
         return false;
     };
 
-    document.addEventListener("submit", function (e) {
-        if (e.target && e.target.id === "formCliente") {
-            guardarClienteHandler(e);
-        }
-    });
-
-    if (btnGuardar) {
-        btnGuardar.addEventListener("click", guardarClienteHandler);
+    if (formCliente) {
+        formCliente.addEventListener("submit", guardarClienteHandler);
     }
 
-    async function cargarHistorialCliente(idCliente, nombre, cedula) {
-        labelClienteNombre.textContent = nombre.toUpperCase();
-        labelClienteCedula.textContent = `CED: ${cedula}`;
-        tablaHistorialBody.innerHTML = `
-            <tr>
-                <td colspan="7" class="font-mono t-cyan">📡 CONSULTANDO HISTORIAL EN BASE DE DATOS...</td>
-            </tr>`;
+    // Botón [+ AGREGAR CLIENTE] para abrir modal en modo creación
+    if (btnNuevoCliente) {
+        btnNuevoCliente.addEventListener("click", () => {
+            limpiarFormulario();
+            if (lblTituloModal) lblTituloModal.textContent = "[INJECT_CLIENT_NODE]";
+            if (btnGuardar) btnGuardar.textContent = "[EXECUTE_DEPLOYMENT]";
+            if (btnCancelarModal) btnCancelarModal.classList.add("hidden");
+            abrirModal();
+        });
+    }
 
-        panelHistorial.style.display = "block";
-        panelHistorial.scrollIntoView({ behavior: 'smooth' });
+    // ==========================================
+    // 📊 4. CARGAR HISTORIAL DE CASOS (RMA)
+    // ==========================================
+    async function cargarHistorialCliente(idCliente, nombre, cedula) {
+        if (labelClienteNombre) labelClienteNombre.textContent = nombre.toUpperCase();
+        if (labelClienteCedula) labelClienteCedula.textContent = `CED: ${cedula}`;
+
+        if (tablaHistorialBody) {
+            tablaHistorialBody.innerHTML = `
+                <tr>
+                    <td colspan="7" class="font-mono t-cyan text-center">📡 CONSULTANDO HISTORIAL EN BASE DE DATOS...</td>
+                </tr>`;
+        }
+
+        if (panelHistorial) {
+            panelHistorial.style.display = "block";
+            panelHistorial.scrollIntoView({ behavior: 'smooth' });
+        }
 
         try {
             const respuesta = await fetch(`${API_CLIENTES}?action=historial&id_cliente=${idCliente}`);
             const data = await respuesta.json();
 
-            if (data.status === "success") {
+            if (data.status === "success" && tablaHistorialBody) {
                 tablaHistorialBody.innerHTML = "";
 
                 if (!data.casos || data.casos.length === 0) {
                     tablaHistorialBody.innerHTML = `
                         <tr>
-                            <td colspan="7" class="font-mono text-white">EL CLIENTE NO POSEE CASOS REGISTRADOS EN SOPORTE TÉCNICO</td>
+                            <td colspan="7" class="font-mono text-center">EL CLIENTE NO POSEE CASOS REGISTRADOS EN SOPORTE TÉCNICO</td>
                         </tr>`;
                     return;
                 }
@@ -173,19 +228,19 @@
                     const fila = document.createElement("tr");
                     fila.innerHTML = `
                         <td class="t-cyan font-mono font-weight-bold">${caso.numero_caso}</td>
-                        <td class="text-white"><strong>${caso.equipo}</strong> (${caso.marca} ${caso.modelo})</td>
+                        <td><strong>${caso.equipo}</strong> (${caso.marca} ${caso.modelo || ''})</td>
                         <td class="font-mono">${caso.numero_serie || 'N/A'}</td>
                         <td class="font-mono">${caso.tipo_caso}</td>
-                        <td><span class="badge-status badge-ready">${caso.estado_actual}</span></td>
+                        <td><span class="system-badge-live">${caso.estado_actual}</span></td>
                         <td class="font-mono">${caso.fecha_ingreso}</td>
                         <td class="font-mono">${caso.fecha_cierre ? caso.fecha_cierre : '<span class="t-cyan">EN PROCESO</span>'}</td>
                     `;
                     tablaHistorialBody.appendChild(fila);
                 });
-            } else {
+            } else if (tablaHistorialBody) {
                 tablaHistorialBody.innerHTML = `
                     <tr>
-                        <td colspan="7" class="font-mono text-neon-red">ERROR AL RECUPERAR EL HISTORIAL DE EQUIPOS</td>
+                        <td colspan="7" class="font-mono text-center">ERROR AL RECUPERAR EL HISTORIAL DE EQUIPOS</td>
                     </tr>`;
             }
         } catch (error) {
@@ -193,9 +248,14 @@
         }
     }
 
+    // ==========================================
+    // ⚙️ 5. ASIGNACIÓN DE EVENTOS EN FILAS
+    // ==========================================
     function AsignarEventosAcciones() {
+        // Clic en Ver Historial
         document.querySelectorAll(".btn-terminal-view").forEach(btn => {
-            btn.onclick = function () {
+            btn.onclick = function (e) {
+                e.stopPropagation();
                 const id = this.getAttribute("data-id");
                 const nombre = this.getAttribute("data-nombre");
                 const cedula = this.getAttribute("data-cedula");
@@ -203,34 +263,42 @@
             };
         });
 
+        // Clic en Editar (Abre el Modal Nativo)
         document.querySelectorAll(".btn-terminal-edit").forEach(btn => {
-            btn.onclick = function () {
-                clienteIdInput.value = this.getAttribute("data-id");
-                clienteNombreInput.value = this.getAttribute("data-nombre");
-                clienteCedulaInput.value = this.getAttribute("data-cedula");
-                clienteCelularInput.value = this.getAttribute("data-celular");
+            btn.onclick = function (e) {
+                e.stopPropagation();
+                esModoEdicion = true;
 
-                btnGuardar.textContent = "[UPDATE_CLIENT_NODE]";
-                btnCancelar.classList.remove("hidden");
-                formCliente.scrollIntoView({ behavior: 'smooth' });
+                if (clienteIdInput) clienteIdInput.value = this.getAttribute("data-id");
+                if (clienteNombreInput) clienteNombreInput.value = this.getAttribute("data-nombre");
+                if (clienteCedulaInput) clienteCedulaInput.value = this.getAttribute("data-cedula");
+                if (clienteCelularInput) clienteCelularInput.value = this.getAttribute("data-celular");
+
+                if (lblTituloModal) lblTituloModal.textContent = `[EDITAR_CLIENTE: ${this.getAttribute("data-nombre").toUpperCase()}]`;
+                if (btnGuardar) btnGuardar.textContent = "[UPDATE_DEPLOY]";
+                if (btnCancelarModal) btnCancelarModal.classList.remove("hidden");
+
+                abrirModal();
             };
         });
 
+        // Clic en Eliminar
         document.querySelectorAll(".btn-terminal-delete").forEach(btn => {
-            btn.onclick = async function () {
+            btn.onclick = async function (e) {
+                e.stopPropagation();
                 const idCliente = this.getAttribute("data-id");
 
                 const confirmar = await Swal.fire({
                     title: '¿PURGAR REGISTRO DE CLIENTE?',
-                    text: `Confirmar destrucción del cliente ID: ${idCliente}`,
+                    text: `Confirmar eliminación del cliente ID: ${idCliente}`,
                     icon: 'warning',
                     showCancelButton: true,
-                    background: '#060b19',
-                    color: '#ffca28',
-                    confirmButtonColor: '#ff3333',
-                    cancelButtonColor: '#506690',
+                    background: '#ffffff',
+                    color: '#0f172a',
+                    confirmButtonColor: '#dc2626',
+                    cancelButtonColor: '#475569',
                     confirmButtonText: '[CONFIRM_PURGE]',
-                    cancelButtonText: 'CANCEL'
+                    cancelButtonText: 'CANCELAR'
                 });
 
                 if (confirmar.isConfirmed) {
@@ -243,9 +311,9 @@
                                 title: 'PURGADO',
                                 text: resultado.message,
                                 icon: 'success',
-                                background: '#060b19',
-                                color: '#00ff66',
-                                confirmButtonColor: '#00b4d8'
+                                background: '#ffffff',
+                                color: '#0f172a',
+                                confirmButtonColor: '#0284c7'
                             });
                             cargarClientes();
                         } else {
@@ -256,9 +324,9 @@
                             icon: 'error',
                             title: 'CANNOT_PURGE',
                             text: error.message,
-                            background: '#060b19',
-                            color: '#ff3333',
-                            confirmButtonColor: '#ff3333'
+                            background: '#ffffff',
+                            color: '#dc2626',
+                            confirmButtonColor: '#dc2626'
                         });
                     }
                 }
@@ -266,17 +334,16 @@
         });
     }
 
-    if (btnCancelar) {
-        btnCancelar.addEventListener("click", limpiarFormulario);
-    }
-
+    // Reset del Formulario y Variables de Estado
     function limpiarFormulario() {
-        formCliente.reset();
-        clienteIdInput.value = "";
-        btnGuardar.textContent = "[INJECT_CLIENT_NODE]";
-        btnCancelar.classList.add("hidden");
+        if (formCliente) formCliente.reset();
+        if (clienteIdInput) clienteIdInput.value = "";
+        esModoEdicion = false;
+        if (btnGuardar) btnGuardar.textContent = "[EXECUTE_DEPLOYMENT]";
+        if (btnCancelarModal) btnCancelarModal.classList.add("hidden");
     }
 
+    // Inicialización al cargar el DOM
     const verificarDom = setInterval(() => {
         if (document.getElementById("tablaClientes")) {
             clearInterval(verificarDom);

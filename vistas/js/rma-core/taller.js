@@ -1,12 +1,38 @@
 (function () {
-    console.log("⚡ [RMA_CORE] Sistema de Diagnóstico de Laboratorio con Filtrado Avanzado Activo...");
+    console.log("⚡ [RMA_CORE] Sistema de Diagnóstico de Laboratorio Activo...");
 
     const API_URL = "../api-rma/rma-core/casos/taller.php";
+
     const form = document.getElementById("formDiagnostico");
     const tbody = document.getElementById("tbodyTallerCola");
     const buscadorCola = document.getElementById("buscadorTallerCola");
     const filtroEstado = document.getElementById("filtroEstadoTaller");
     const ordenCola = document.getElementById("ordenTallerCola");
+
+    const modalOverlay = document.getElementById("modalTallerOverlay");
+    const btnCerrarModalX = document.getElementById("btnCerrarModalX");
+    const btnCancelarModal = document.getElementById("btnCancelarModal");
+    const lblTituloModal = document.getElementById("lblTituloModal");
+
+    function abrirModal() {
+        if (modalOverlay) modalOverlay.style.display = "flex";
+    }
+
+    function cerrarModal() {
+        if (modalOverlay) modalOverlay.style.display = "none";
+        resetFormModal();
+    }
+
+    if (btnCerrarModalX) btnCerrarModalX.addEventListener("click", cerrarModal);
+    if (btnCancelarModal) btnCancelarModal.addEventListener("click", cerrarModal);
+
+    function resetFormModal() {
+        if (form) form.reset();
+        const idCasoInput = document.getElementById("diagIdCaso");
+        if (idCasoInput) idCasoInput.value = "";
+        const display = document.getElementById("fileNameDiagDisplay");
+        if (display) display.textContent = "";
+    }
 
     async function inicializarTaller() {
         try {
@@ -19,7 +45,7 @@
                     dataEst.estados.forEach(e => {
                         const opt = document.createElement("option");
                         opt.value = e.id;
-                        opt.textContent = `// TRANSLATION: ${e.nombre.toUpperCase()}`;
+                        opt.textContent = `// ESTADO: ${e.nombre.toUpperCase()}`;
                         selectEstado.appendChild(opt);
                     });
                 }
@@ -33,6 +59,8 @@
     }
 
     async function listarColaDispositivos() {
+        if (!tbody) return;
+
         try {
             const buscar = buscadorCola ? buscadorCola.value.trim() : "";
             const alcance = filtroEstado ? filtroEstado.value : "activos";
@@ -44,117 +72,180 @@
 
             if (dataCola.status === "success") {
                 tbody.innerHTML = "";
-                document.getElementById("contadorCola").textContent = `WAIT: ${dataCola.cola.length}`;
 
-                if (dataCola.cola.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#506690;">[NO_PENDING_HARDWARE_FOUND]</td></tr>`;
+                const contador = document.getElementById("contadorCola");
+                if (contador) contador.textContent = `WAIT: ${dataCola.cola.length}`;
+
+                if (!dataCola.cola || dataCola.cola.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="7" class="text-center font-mono">[NO_PENDING_HARDWARE_FOUND]</td></tr>`;
                     return;
                 }
 
                 dataCola.cola.forEach(c => {
                     const tr = document.createElement("tr");
-                    const badgeClass = c.id_estado_actual == 1 ? "status-1" : "status-default";
+
+                    // Manejo seguro de valores nulos o indefinidos
+                    const numeroCaso = c.numero_caso || 'N/A';
+                    const fechaIngreso = c.fecha_ingreso || 'N/A';
+                    const clienteNombre = c.cliente_nombre ? c.cliente_nombre.toUpperCase() : 'CLIENTE S/N';
+                    const equipo = c.equipo ? c.equipo.toUpperCase() : 'COMPONENTE';
+                    const marca = c.marca ? c.marca.toUpperCase() : 'S/M';
+                    const numeroSerie = c.numero_serie ? c.numero_serie.toUpperCase() : 'S/N';
+                    const estadoNombre = c.estado_nombre ? c.estado_nombre.toUpperCase() : 'EN DIAGNÓSTICO';
+
+                    const badgeStyle = c.id_estado_actual == 1
+                        ? "color:#0284c7; border-color:#0284c7; background:rgba(2,132,199,0.08);"
+                        : "color:#d97706; border-color:#d97706; background:rgba(217,119,6,0.08);";
 
                     tr.innerHTML = `
-                        <td class="text-neon-cyan font-weight-bold">${c.numero_caso}</td>
-                        <td style="text-transform:uppercase;">${c.equipo} <span style="color:#506690;">${c.marca}</span><br><small style="color:#ffca28;">S/N: ${c.numero_serie}</small></td>
-                        <td><span class="badge-status-cyber ${badgeClass}">${c.estado_nombre.toUpperCase()}</span></td>
-                        <td style="text-align:center;"><button class="btn-cyber-action btn-select-node" data-id="${c.id}">[LOAD_NODE]</button></td>
+                        <td class="t-cyan font-mono">${numeroCaso}</td>
+                        <td class="font-mono">${fechaIngreso}</td>
+                        <td class="font-weight-bold">${clienteNombre}</td>
+                        <td class="font-mono">${equipo} <span style="color:#64748b;">(${marca})</span></td>
+                        <td class="font-mono">${numeroSerie}</td>
+                        <td><span class="system-badge-live" style="${badgeStyle}">${estadoNombre}</span></td>
+                        <td>
+                            <button type="button" class="btn-terminal-edit btn-select-node" data-id="${c.id}" title="Evaluar Hardware">
+                                <i class="fa fa-wrench"></i> [EVALUAR]
+                            </button>
+                        </td>
                     `;
 
-                    tr.querySelector(".btn-select-node").onclick = (e) => {
-                        e.stopPropagation();
-                        cargarCasoEnConsola(c.id);
-                    };
+                    const btnSelect = tr.querySelector(".btn-select-node");
+                    if (btnSelect) {
+                        btnSelect.onclick = (e) => {
+                            e.stopPropagation();
+                            cargarCasoEnConsola(c.id);
+                        };
+                    }
+
                     tr.onclick = () => cargarCasoEnConsola(c.id);
 
                     tbody.appendChild(tr);
                 });
+            } else {
+                tbody.innerHTML = `<tr><td colspan="7" class="text-center font-mono">[ERROR_CARGANDO_DATOS]</td></tr>`;
             }
         } catch (err) {
-            console.error("Error mapeando el streaming de la cola:", err);
+            console.error("Error mapeando la cola:", err);
+            tbody.innerHTML = `<tr><td colspan="7" class="text-center font-mono text-danger">[ERROR_DE_CONEXION]</td></tr>`;
         }
     }
 
     async function cargarCasoEnConsola(id) {
         try {
+            Swal.fire({
+                title: 'CARGANDO TELEMETRÍA...',
+                text: 'Obteniendo datos del caso ID: ' + id,
+                background: '#ffffff',
+                color: '#0f172a',
+                showConfirmButton: false,
+                allowOutsideClick: false,
+                didOpen: () => { Swal.showLoading(); }
+            });
+
             const res = await fetch(`${API_URL}?action=obtener_caso&id=${id}`);
             const data = await res.json();
+
+            Swal.close();
 
             if (data.status === "success") {
                 const c = data.caso;
 
-                form.classList.add("cyber-active-form");
-                document.getElementById("btnGuardarDiag").disabled = false;
-
                 document.getElementById("diagIdCaso").value = c.id;
-                document.getElementById("diagNumeroCaso").value = c.numero_caso;
-                document.getElementById("diagHardware").value = `${c.equipo} ${c.marca}`.toUpperCase();
-                document.getElementById("diagSerie").value = c.numero_serie;
-                document.getElementById("diagProblemaOriginal").value = c.descripcion_problema;
+                document.getElementById("diagNumeroCaso").value = c.numero_caso || '';
+                document.getElementById("diagHardware").value = `${c.equipo || ''} ${c.marca || ''} ${c.modelo || ''}`.toUpperCase().trim();
+                document.getElementById("diagSerie").value = c.numero_serie || '';
+                document.getElementById("diagProblemaOriginal").value = c.descripcion_problema || '';
 
                 document.getElementById("diagDiagnosticoFinal").value = c.diagnostico_final ?? "";
-                document.getElementById("selectEstadoDiag").value = c.id_estado_actual;
-                document.getElementById("fileNameDiagDisplay").textContent = c.foto_archivo ? `[CURRENT]: ${c.foto_archivo}` : '';
+                document.getElementById("selectEstadoDiag").value = c.id_estado_actual || '';
+
+                const display = document.getElementById("fileNameDiagDisplay");
+                if (display) display.textContent = c.foto_archivo ? `[CURRENT_IMG]: ${c.foto_archivo}` : '';
+
+                if (lblTituloModal) {
+                    lblTituloModal.textContent = `[EVALUACIÓN_DE_HARDWARE: ${c.numero_caso}]`;
+                }
+
+                abrirModal();
+            } else {
+                Swal.fire("ERROR", data.message, "error");
             }
         } catch (err) {
-            Swal.fire("ERROR DE TRANSMISIÓN", "No se pudo recuperar la telemetría del nodo.", "error");
+            Swal.close();
+            Swal.fire({
+                icon: "error",
+                title: "ERROR DE TRANSMISIÓN",
+                text: "No se pudo recuperar la telemetría del nodo.",
+                background: '#ffffff',
+                color: '#dc2626'
+            });
         }
     }
 
-    form?.addEventListener("submit", async (e) => {
-        e.preventDefault();
+    if (form) {
+        form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            e.stopPropagation();
 
-        const datos = new FormData(form);
+            const datos = new FormData(form);
 
-        try {
-            Swal.fire({
-                title: "[WRITING_DIAGNOSTIC_LOGS...]",
-                allowOutsideClick: false,
-                didOpen: () => Swal.showLoading()
-            });
-
-            const res = await fetch(`${API_URL}?action=guardar_diagnostico`, {
-                method: "POST",
-                body: datos
-            });
-            const r = await res.json();
-
-            if (r.status === "success") {
+            try {
                 Swal.fire({
-                    icon: "success",
-                    title: "MATRIZ SINCRONIZADA",
-                    text: r.message
+                    title: "PERSISTIENDO REGISTRO...",
+                    text: "Actualizando estado y guardando diagnóstico...",
+                    background: '#ffffff',
+                    color: '#0f172a',
+                    allowOutsideClick: false,
+                    didOpen: () => Swal.showLoading()
                 });
 
-                form.reset();
-                form.classList.remove("cyber-active-form");
-                document.getElementById("btnGuardarDiag").disabled = true;
-                document.getElementById("fileNameDiagDisplay").textContent = '';
+                const res = await fetch(`${API_URL}?action=guardar_diagnostico`, {
+                    method: "POST",
+                    body: datos
+                });
+                const r = await res.json();
 
-                await listarColaDispositivos();
-            } else {
-                Swal.fire("FALLO EN REGISTRO", r.message, "error");
+                if (r.status === "success") {
+                    Swal.fire({
+                        icon: "success",
+                        title: "MATRIZ SINCRONIZADA",
+                        text: r.message,
+                        background: '#ffffff',
+                        color: '#0f172a',
+                        confirmButtonColor: '#0284c7'
+                    });
+
+                    cerrarModal();
+                    await listarColaDispositivos();
+                } else {
+                    Swal.fire({
+                        icon: "error",
+                        title: "FALLO EN REGISTRO",
+                        text: r.message,
+                        background: '#ffffff',
+                        color: '#dc2626'
+                    });
+                }
+            } catch (err) {
+                Swal.fire({
+                    icon: "error",
+                    title: "CRITICAL CORRUPT ERROR",
+                    text: "La inyección de diagnóstico falló al comunicar con la API.",
+                    background: '#ffffff',
+                    color: '#dc2626'
+                });
             }
-        } catch (err) {
-            Swal.fire("CRITICAL CORRUPT ERROR", "La inyección de diagnóstico falló.", "error");
-        }
-    });
+        });
+    }
 
-    buscadorCola?.addEventListener("input", () => {
-        listarColaDispositivos();
-    });
-
-    filtroEstado?.addEventListener("change", () => {
-        listarColaDispositivos();
-    });
-
-    ordenCola?.addEventListener("change", () => {
-        listarColaDispositivos();
-    });
+    if (buscadorCola) buscadorCola.addEventListener("input", listarColaDispositivos);
+    if (filtroEstado) filtroEstado.addEventListener("change", listarColaDispositivos);
+    if (ordenCola) ordenCola.addEventListener("change", listarColaDispositivos);
 
     const verifTaller = setInterval(() => {
-        if (document.getElementById("formDiagnostico")) {
+        if (document.getElementById("tablaTaller")) {
             clearInterval(verifTaller);
             inicializarTaller();
         }

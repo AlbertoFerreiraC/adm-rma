@@ -1,117 +1,166 @@
-/* estilos.css */
+/* =========================================================
+   MICROEXPRESS RMA — PALETA GLOBAL SLATE CYBERPUNK LIGHT
+   vistas/css/estilos.css
+========================================================= */
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@500;600;700&display=swap');
 
-/* Importamos una fuente bonita de Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+:root {
+    /* Fondo y Superficies en Tono Claro */
+    --bg-cyber-light: #f0f4f8;
+    --card-cyber-light: #ffffff;
+    --border-cyber-subtle: #cbd5e1;
 
-body {
-    font-family: 'Roboto', sans-serif;
-    background-color: #f4f6f9;
-    margin: 0;
-    padding: 0;
-    color: #333;
+    /* Colores de Texto */
+    --text-cyber-dark: #0f172a;
+    --text-cyber-muted: #475569;
+
+    /* Acentos Neón Adaptados a Fondo Claro */
+    --neon-cyan-dark: #0284c7;
+    --neon-cyan-glow: #00b4d8;
+    --neon-green-dark: #15803d;
+    --neon-yellow-dark: #d97706;
+    --neon-purple-dark: #7e22ce;
+    --neon-red-dark: #dc2626;
+
+    /* Fuentes del Sistema */
+    --font-ui: 'Rajdhani', sans-serif;
+    --font-code: 'Share Tech Mono', monospace;
 }
 
+/* =========================================================
+   1. CORRECCIÓN DE ESPACIOS Y MARGENES DE ADMINLTE (100% ANCHO)
+========================================================= */
+body,
+.wrapper,
+.content-wrapper {
+    background-color: var(--bg-cyber-light) !important;
+    font-family: var(--font-ui);
+    color: var(--text-cyber-dark);
+}
+
+/* Anular el margen izquierdo de AdminLTE */
+.content-wrapper,
+.main-footer,
+.main-header {
+    margin-left: 0 !important;
+    transition: none !important;
+}
+
+/* Envoltura global con Trama Tecnológica */
 .wrapper {
-    display: flex;
-    width: 100%;
-    align-items: stretch;
-}
-
-/* --- Estilos del Menú Lateral (Sidebar) --- */
-.sidebar {
-    min-width: 250px;
-    max-width: 250px;
-    background: #2c3e50;
-    /* Un azul oscuro profesional */
-    color: #fff;
+    overflow-x: hidden !important;
     min-height: 100vh;
-    transition: all 0.3s;
+    background-image:
+        radial-gradient(circle at 50% 10%, rgba(2, 132, 199, 0.05) 0%, transparent 60%),
+        linear-gradient(rgba(203, 213, 225, 0.2) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(203, 213, 225, 0.2) 1px, transparent 1px) !important;
+    background-size: 100% 100%, 20px 20px, 20px 20px !important;
 }
 
-.sidebar .sidebar-header {
+/* =========================================================
+   2. COMPONENTES GLOBALES (TARJETAS, CABECERAS Y BOTONES)
+========================================================= */
+.dashboard-cyber-wrapper {
+    background: transparent !important;
     padding: 20px;
-    background: #1a252f;
-    text-align: center;
-    font-size: 1.5em;
 }
 
-.sidebar ul.components {
-    padding: 20px 0;
-    border-bottom: 1px solid #47748b;
-    display: flex;
-    flex-direction: column;
-    min-height: calc(100vh - 75px);
-}
-
-.sidebar ul li a[href*="logout.php"] {
-    margin-top: auto;
-    background-color: #c0392b;
-    color: #fff;
-}
-
-.sidebar ul li a[href*="logout.php"]:hover {
-    background-color: #e74c3c;
-}
-
-.sidebar ul p {
-    color: #fff;
-    padding: 10px;
-}
-
-.sidebar ul li a {
-    padding: 15px 20px;
-    font-size: 1.1em;
-    display: block;
-    color: #adb5bd;
-    /* Texto de enlaces un poco más suave */
-    text-decoration: none;
-    transition: all 0.2s;
-}
-
-.sidebar ul li a:hover {
-    color: #ffffff;
-    background: #34495e;
-}
-
-.sidebar ul li.active>a,
-a[aria-expanded="true"] {
-    color: #fff;
-    background: #1a252f;
-}
-
-.sidebar ul li a i {
-    margin-right: 10px;
-    /* Espacio entre el ícono y el texto */
-}
-
-
-/* --- Estilos del Contenido Principal --- */
-#content {
-    width: 100%;
-    padding: 20px 40px;
-    min-height: 100vh;
-    transition: all 0.3s;
-}
-
-#content h1 {
-    color: #2c3e50;
-    margin-bottom: 30px;
-}
-
-.logo-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 70vh;
-    /* Centra el logo verticalmente */
+/* Cabecera del Módulo */
+.cyber-header {
     background-color: #ffffff;
-    padding: 30px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    border-bottom: 2px solid var(--neon-cyan-dark);
+    padding: 15px 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 6px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
 }
 
-.logo-container img {
-    max-width: 100%;
-    max-height: 300px;
-    height: auto;
+.header-brand-glitch h2 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text-cyber-dark);
+    margin: 0;
+}
+
+/* Paneles y Tarjetas */
+.cyber-panel-card {
+    background: var(--card-cyber-light) !important;
+    border: 1px solid var(--border-cyber-subtle) !important;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 10px 25px rgba(15, 23, 42, 0.04);
+}
+
+.border-neon-cyan {
+    border-left: 4px solid var(--neon-cyan-dark) !important;
+}
+
+.border-neon-blue {
+    border-left: 4px solid var(--neon-cyan-glow) !important;
+}
+
+.border-neon-green {
+    border-left: 4px solid var(--neon-green-dark) !important;
+}
+
+.border-neon-yellow {
+    border-left: 4px solid var(--neon-yellow-dark) !important;
+}
+
+/* Tipografía de Acento */
+.font-mono {
+    font-family: var(--font-code);
+}
+
+.t-cyan {
+    color: var(--neon-cyan-dark);
+    font-weight: bold;
+}
+
+.cyan-accent {
+    color: var(--neon-cyan-dark);
+    font-weight: bold;
+}
+
+/* Tablas */
+.cyber-mini-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+}
+
+.cyber-mini-table th {
+    font-family: var(--font-code);
+    font-size: 0.75rem;
+    color: var(--text-cyber-muted);
+    padding: 12px 8px;
+    border-bottom: 2px solid var(--border-cyber-subtle);
+    text-transform: uppercase;
+    text-align: center;
+    background: #f8fafc;
+}
+
+.cyber-mini-table td {
+    padding: 12px 8px;
+    border-bottom: 1px solid #f1f5f9;
+    color: var(--text-cyber-dark);
+    text-align: center;
+}
+
+/* Inputs */
+.cyber-input,
+.cyber-input-search {
+    background: #f8fafc;
+    border: 1px solid var(--border-cyber-subtle);
+    color: var(--text-cyber-dark);
+    border-radius: 4px;
+}
+
+.cyber-input:focus,
+.cyber-input-search:focus {
+    border-color: var(--neon-cyan-dark);
+    background: #ffffff;
+    outline: none;
 }

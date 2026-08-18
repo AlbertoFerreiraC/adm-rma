@@ -14,210 +14,385 @@ $id_usuario_tecnico = $_SESSION['id'] ?? '';
     </header>
 
     <section class="cyber-content mt-4">
-        <div class="cyber-grid-two-columns">
 
-            <div class="cyber-panel-card glass-panel-neon border-neon-blue"
-                style="display: flex; flex-direction: column; gap: 15px;">
-                <div class="panel-cyber-header"
-                    style="display:flex; justify-content:space-between; align-items:center;">
-                    <h4><span class="t-cyan">//</span> COLA DE DISPOSITIVOS POR EVALUAR</h4>
-                    <span id="contadorCola" class="system-badge-live" style="color:#00f2ff; border-color:#00f2ff;">WAIT:
-                        0</span>
+        <!-- PANEL PRINCIPAL DE LA TABLA -->
+        <div class="cyber-panel-card glass-panel-neon border-neon-cyan">
+
+            <!-- BARRA SUPERIOR: Buscador y Filtros de Estado -->
+            <div class="panel-cyber-header flex-header-toolbar">
+                <div class="cyber-search-box">
+                    <i class="fa fa-search search-icon-hud"></i>
+                    <input type="text" id="buscadorTallerCola" class="cyber-input-search"
+                        placeholder="🔍 Buscar por N° caso, dispositivo, cliente o S/N...">
                 </div>
 
-                <div class="cyber-filter-subpanel font-mono">
-                    <div class="filter-row-input">
-                        <input type="text" id="buscadorTallerCola" class="cyber-input input-mini"
-                            placeholder="[ BUSCAR CASO, SERIE O HARDWARE... ]">
-                    </div>
-                    <div class="filter-row-controls">
-                        <select id="filtroEstadoTaller" class="cyber-input input-mini">
-                            <option value="activos">[ COMPONENTES ACTIVOS ]</option>
-                            <option value="todos">[ MOSTRAR LA MATRIZ HISTÓRICA ]</option>
-                        </select>
-                        <select id="ordenTallerCola" class="cyber-input input-mini">
-                            <option value="asc">[ ORDEN: CRONOLÓGICO ASCENDENTE ]</option>
-                            <option value="desc">[ ORDEN: RECIENTES PRIMERO ]</option>
-                        </select>
-                    </div>
-                </div>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    <select id="filtroEstadoTaller" class="cyber-input" style="width: auto;">
+                        <option value="activos">[ COMPONENTES ACTIVOS ]</option>
+                        <option value="todos">[ MOSTRAR MATRIZ HISTÓRICA ]</option>
+                    </select>
 
-                <div class="panel-cyber-body font-mono" style="max-height: 400px; overflow-y: auto;">
-                    <table class="cyber-mini-table" style="width: 100%;">
-                        <thead>
-                            <tr>
-                                <th>N° CASO</th>
-                                <th>DISPOSITIVO / S/N</th>
-                                <th>ESTADO</th>
-                                <th style="text-align: center;">ACCION</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tbodyTallerCola">
-                            <tr>
-                                <td colspan="4" style="text-align: center; color: #506690;">
-                                    [STREAMING_LAB_QUEUE...]
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <select id="ordenTallerCola" class="cyber-input" style="width: auto;">
+                        <option value="asc">[ ORDEN: ASCENDENTE ]</option>
+                        <option value="desc">[ ORDEN: RECIENTES ]</option>
+                    </select>
                 </div>
             </div>
 
-            <div class="cyber-panel-card glass-panel-neon border-neon-purple">
-                <div class="panel-cyber-header">
-                    <h4><span class="purple-accent">//</span> CONSOLA DE REPARACIÓN Y TELEMETRÍA</h4>
-                </div>
-                <div class="panel-cyber-body mt-3 font-mono">
-
-                    <form id="formDiagnostico" method="POST" enctype="multipart/form-data" class="cyber-disabled-form">
-                        <input type="hidden" name="id_caso" id="diagIdCaso">
-                        <input type="hidden" name="id_usuario" value="<?php echo $id_usuario_tecnico; ?>">
-
-                        <div class="cyber-form-group">
-                            <label class="node-label">CASO SELECCIONADO:</label>
-                            <input type="text" id="diagNumeroCaso" class="cyber-input locked-node"
-                                placeholder="[ SELECCIONE UN HARDWARE DE LA COLA ]" readonly>
-                        </div>
-
-                        <div class="cyber-form-group-row"
-                            style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                            <div class="cyber-form-group">
-                                <label class="node-label">COMPONENTE / MARCA:</label>
-                                <input type="text" id="diagHardware" class="cyber-input locked-node" readonly>
-                            </div>
-                            <div class="cyber-form-group">
-                                <label class="node-label">NÚMERO DE SERIE (S/N):</label>
-                                <input type="text" id="diagSerie" class="cyber-input locked-node" readonly>
-                            </div>
-                        </div>
-
-                        <div class="cyber-form-group">
-                            <label class="node-label">PROBLEMA REPORTADO EN INGRESO:</label>
-                            <textarea id="diagProblemaOriginal" class="cyber-input locked-node" rows="2"
-                                style="resize:none;" readonly></textarea>
-                        </div>
-
-                        <hr class="cyber-hr">
-
-                        <div class="cyber-form-group">
-                            <label class="node-label text-yellow">// DIAGNÓSTICO FINAL / ACCIONES REALIZADAS:</label>
-                            <textarea name="diagnostico_final" id="diagDiagnosticoFinal" class="cyber-input" rows="4"
-                                placeholder="Describa la falla localizada y los componentes sustituidos..."
-                                required></textarea>
-                        </div>
-
-                        <div class="cyber-form-group-row"
-                            style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; align-items: end;">
-                            <div class="cyber-form-group">
-                                <label class="node-label text-yellow">// ACTUALIZAR ESTADO DE LA MATRIZ:</label>
-                                <select name="id_estado_actual" id="selectEstadoDiag" class="cyber-input" required>
-                                    <option value="">[SELECCIONE NUEVO ESTADO]</option>
-                                </select>
-                            </div>
-                            <div class="cyber-form-group">
-                                <label class="node-label text-yellow">// ADJUNTAR ARCHIVO / EVIDENCIA:</label>
-                                <input type="file" name="foto_archivo" id="fotoDiag" class="cyber-input-file">
-                                <label for="fotoDiag" class="cyber-file-trigger">[UPDATE_IMG_STREAM]</label>
-                                <span id="fileNameDiagDisplay" class="t-cyan"
-                                    style="display:block; font-size:0.75rem; margin-top:4px;"></span>
-                            </div>
-                        </div>
-
-                        <div class="mt-4">
-                            <button type="submit" id="btnGuardarDiag" class="node-submit-btn text-neon-green" disabled>
-                                [COMMIT_DIAGNOSTIC_DATA]
-                            </button>
-                        </div>
-                    </form>
-
-                </div>
+            <!-- TABLA PRINCIPAL DE COMPONENTES EN TALLER -->
+            <div class="panel-cyber-body-table mt-3">
+                <table class="cyber-mini-table" id="tablaTaller">
+                    <thead>
+                        <tr>
+                            <th>N° CASO</th>
+                            <th>FECHA INGRESO</th>
+                            <th>CLIENTE</th>
+                            <th>DISPOSITIVO / MARCA</th>
+                            <th>N° SERIE</th>
+                            <th>ESTADO</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbodyTallerCola">
+                        <tr>
+                            <td colspan="7" class="text-center font-mono">[STREAMING_LAB_QUEUE...]</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
 
         </div>
     </section>
 </div>
 
+<!-- ==========================================
+     MODAL EMERGENTE: CONSOLA DE DIAGNÓSTICO Y TELEMETRÍA (NATIVO)
+========================================== -->
+<div class="custom-cyber-modal-overlay" id="modalTallerOverlay" style="display: none;">
+    <div class="custom-cyber-modal-container border-neon-blue" style="max-width: 650px;">
+
+        <div class="cyber-modal-header">
+            <button type="button" class="text-cyber-close" id="btnCerrarModalX">&times;</button>
+            <h4 class="modal-title font-mono" id="modalTallerLabel">
+                <span class="cyan-accent">//</span> <span id="lblTituloModal">[EVALUACIÓN_DE_HARDWARE: RMA-0000]</span>
+            </h4>
+        </div>
+
+        <form id="formDiagnostico" autocomplete="off" method="POST" enctype="multipart/form-data"
+            onsubmit="return false;">
+            <div class="modal-body font-mono">
+                <input type="hidden" name="id_caso" id="diagIdCaso">
+                <input type="hidden" name="id_usuario" value="<?php echo $id_usuario_tecnico; ?>">
+
+                <div class="cyber-form-group-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div class="cyber-form-group">
+                        <label class="node-label">CASO SELECCIONADO:</label>
+                        <input type="text" id="diagNumeroCaso" class="cyber-input locked-node" readonly>
+                    </div>
+                    <div class="cyber-form-group">
+                        <label class="node-label">NÚMERO DE SERIE (S/N):</label>
+                        <input type="text" id="diagSerie" class="cyber-input locked-node" readonly>
+                    </div>
+                </div>
+
+                <div class="cyber-form-group">
+                    <label class="node-label">COMPONENTE / DISPOSITIVO:</label>
+                    <input type="text" id="diagHardware" class="cyber-input locked-node" readonly>
+                </div>
+
+                <div class="cyber-form-group">
+                    <label class="node-label">PROBLEMA REPORTADO EN INGRESO:</label>
+                    <textarea id="diagProblemaOriginal" class="cyber-input locked-node" rows="2" style="resize:none;"
+                        readonly></textarea>
+                </div>
+
+                <hr class="cyber-hr">
+
+                <div class="cyber-form-group">
+                    <label class="node-label text-yellow">// DIAGNÓSTICO FINAL / ACCIONES REALIZADAS:</label>
+                    <textarea name="diagnostico_final" id="diagDiagnosticoFinal" class="cyber-input cyber-textarea"
+                        rows="4" placeholder="Describa la falla localizada y los componentes sustituidos..."
+                        required></textarea>
+                </div>
+
+                <div class="cyber-form-group-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div class="cyber-form-group">
+                        <label class="node-label text-yellow">// ACTUALIZAR ESTADO EN MATRIZ:</label>
+                        <select name="id_estado_actual" id="selectEstadoDiag" class="cyber-input" required>
+                            <option value="">[SELECCIONE ESTADO]</option>
+                        </select>
+                    </div>
+
+                    <div class="cyber-form-group">
+                        <label class="node-label text-yellow">// EVIDENCIA DE EVALUACIÓN:</label>
+                        <input type="file" name="foto_archivo" id="fotoDiag" class="cyber-input-file">
+                        <label for="fotoDiag" class="cyber-file-trigger">[UPDATE_IMG_STREAM]</label>
+                        <span id="fileNameDiagDisplay" class="t-cyan font-mono mt-1"
+                            style="display:block; font-size:0.75rem;"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer cyber-modal-footer">
+                <button type="button" class="btn-cyber-cancel" id="btnCancelarModal">[CANCEL_EVALUATION]</button>
+                <button type="submit" id="btnGuardarDiag"
+                    class="node-submit-btn text-neon-blue">[COMMIT_DIAGNOSTIC_DATA]</button>
+            </div>
+        </form>
+
+    </div>
+</div>
+
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@500;600;700&display=swap');
 
+    :root {
+        --bg-cyber-light: #f0f4f8;
+        --card-cyber-light: #ffffff;
+        --border-cyber-subtle: #cbd5e1;
+        --text-cyber-dark: #0f172a;
+        --text-cyber-muted: #475569;
+
+        --neon-cyan-dark: #0284c7;
+        --neon-cyan-glow: #00b4d8;
+        --neon-green-dark: #15803d;
+        --neon-red-dark: #dc2626;
+        --neon-yellow-dark: #d97706;
+    }
+
+    .hidden {
+        display: none !important;
+    }
+
     .dashboard-cyber-wrapper {
-        background-color: #060913;
+        background-color: var(--bg-cyber-light);
+        background-image:
+            radial-gradient(circle at 50% 10%, rgba(2, 132, 199, 0.05) 0%, transparent 60%),
+            linear-gradient(rgba(203, 213, 225, 0.2) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(203, 213, 225, 0.2) 1px, transparent 1px);
+        background-size: 100% 100%, 20px 20px, 20px 20px;
         min-height: 100vh;
         padding: 20px;
-        color: #e2e8f0;
+        color: var(--text-cyber-dark);
         font-family: 'Rajdhani', sans-serif;
     }
 
     .cyber-header {
-        background-color: rgba(6, 11, 25, 0.9);
-        border-bottom: 2px solid #101c38;
+        background-color: #ffffff;
+        border-bottom: 2px solid var(--neon-cyan-dark);
         padding: 15px 25px;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        border-radius: 4px;
+        border-radius: 6px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+    }
+
+    .header-brand-glitch {
+        display: flex;
+        align-items: center;
+        gap: 12px;
     }
 
     .header-brand-glitch h2 {
         font-size: 1.2rem;
         font-weight: 700;
-        color: #fff;
+        color: var(--text-cyber-dark);
         margin: 0;
+        letter-spacing: 0.5px;
     }
 
     .system-badge-live {
         font-family: 'Share Tech Mono', monospace;
         font-size: 0.65rem;
-        border: 1px solid #ffca28;
-        color: #ffca28;
-        padding: 2px 6px;
+        border: 1px solid var(--neon-cyan-dark);
+        color: var(--neon-cyan-dark);
+        background: rgba(2, 132, 199, 0.08);
+        padding: 2px 8px;
         border-radius: 4px;
-    }
-
-    .cyber-grid-two-columns {
-        display: grid;
-        grid-template-columns: 1fr 1.1fr;
-        gap: 20px;
-    }
-
-    @media(max-width: 992px) {
-        .cyber-grid-two-columns {
-            grid-template-columns: 1fr;
-        }
+        font-weight: bold;
     }
 
     .cyber-panel-card {
-        background: rgba(10, 16, 32, 0.6);
-        border: 1px solid rgba(255, 255, 255, 0.04);
-        backdrop-filter: blur(10px);
+        background: var(--card-cyber-light);
+        border: 1px solid var(--border-cyber-subtle);
         border-radius: 8px;
         padding: 20px;
+        box-shadow: 0 10px 25px rgba(15, 23, 42, 0.04);
+    }
+
+    .border-neon-cyan {
+        border-left: 4px solid var(--neon-cyan-dark);
     }
 
     .border-neon-blue {
-        border-left: 3px solid #00f2ff;
+        border-left: 4px solid var(--neon-cyan-glow);
     }
 
-    .border-neon-purple {
-        border-left: 3px solid #9d4edd;
+    .flex-header-toolbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+        flex-wrap: wrap;
     }
 
-    .t-cyan {
-        color: #00f2ff;
-        margin-right: 5px;
+    .cyber-search-box {
+        position: relative;
+        flex: 1;
+        max-width: 400px;
     }
 
-    .purple-accent {
-        color: #9d4edd;
-        margin-right: 5px;
+    .search-icon-hud {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--text-cyber-muted);
     }
 
-    .text-yellow {
-        color: #ffca28;
+    .cyber-input-search {
+        width: 100%;
+        background: #f8fafc;
+        border: 1px solid var(--border-cyber-subtle);
+        color: var(--text-cyber-dark);
+        padding: 8px 12px 8px 35px;
+        font-family: 'Share Tech Mono', monospace;
+        font-size: 0.85rem;
+        border-radius: 4px;
+        transition: all 0.2s;
+    }
+
+    .cyber-input-search:focus {
+        border-color: var(--neon-cyan-dark);
+        background: #ffffff;
+        outline: none;
+    }
+
+    .panel-cyber-body-table {
+        overflow-x: auto;
+    }
+
+    .cyber-mini-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.88rem;
+    }
+
+    .cyber-mini-table th {
+        font-family: 'Share Tech Mono', monospace;
+        font-size: 0.75rem;
+        color: var(--text-cyber-muted);
+        padding: 12px 8px;
+        border-bottom: 2px solid var(--border-cyber-subtle);
+        text-transform: uppercase;
+        text-align: center;
+        background: #f8fafc;
+    }
+
+    .cyber-mini-table td {
+        padding: 12px 8px;
+        border-bottom: 1px solid #f1f5f9;
+        color: var(--text-cyber-dark);
+        text-align: center;
     }
 
     .font-mono {
         font-family: 'Share Tech Mono', monospace;
+    }
+
+    .cyan-accent {
+        color: var(--neon-cyan-dark);
+        font-weight: bold;
+    }
+
+    .t-cyan {
+        color: var(--neon-cyan-dark);
+        font-weight: bold;
+    }
+
+    .text-yellow {
+        color: var(--neon-yellow-dark);
+        font-weight: bold;
+    }
+
+    .btn-terminal-edit {
+        background: transparent;
+        border: 1px solid var(--border-cyber-subtle);
+        color: var(--text-cyber-muted);
+        padding: 5px 10px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.75rem;
+        font-family: 'Share Tech Mono', monospace;
+        transition: all 0.2s;
+    }
+
+    .btn-terminal-edit:hover {
+        color: var(--neon-cyan-dark);
+        border-color: var(--neon-cyan-dark);
+        background: rgba(2, 132, 199, 0.08);
+    }
+
+    /* MODAL NATIVO ESTÁNDAR */
+    .custom-cyber-modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(15, 23, 42, 0.6);
+        backdrop-filter: blur(4px);
+        z-index: 99999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .custom-cyber-modal-container {
+        background: #ffffff;
+        width: 100%;
+        border-radius: 8px;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        border: 1px solid var(--border-cyber-subtle);
+        overflow: hidden;
+        animation: fadeInModal 0.2s ease-out;
+    }
+
+    @keyframes fadeInModal {
+        from {
+            opacity: 0;
+            transform: scale(0.95);
+        }
+
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    .cyber-modal-header {
+        border-bottom: 1px solid var(--border-cyber-subtle);
+        padding: 15px 20px;
+        background: #f8fafc;
+    }
+
+    .text-cyber-close {
+        color: var(--text-cyber-muted);
+        font-size: 1.5rem;
+        float: right;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        line-height: 1;
+    }
+
+    .text-cyber-close:hover {
+        color: var(--neon-red-dark);
+    }
+
+    .modal-body {
+        padding: 20px;
     }
 
     .cyber-form-group {
@@ -225,101 +400,45 @@ $id_usuario_tecnico = $_SESSION['id'] ?? '';
     }
 
     .node-label {
-        color: #506690;
+        color: var(--text-cyber-muted);
         font-size: 0.75rem;
         display: block;
         margin-bottom: 5px;
+        font-weight: bold;
     }
 
     .cyber-input {
         width: 100%;
-        background: #03050c;
-        border: 1px solid #101c38;
-        color: #fff;
-        padding: 10px 12px;
+        background: #f8fafc;
+        border: 1px solid var(--border-cyber-subtle);
+        color: var(--text-cyber-dark);
+        padding: 8px 12px;
+        font-family: monospace;
         border-radius: 4px;
         box-sizing: border-box;
-        outline: none;
     }
 
     .cyber-input:focus {
-        border-color: #9d4edd;
-    }
-
-    select.cyber-input option {
-        background: #060913;
-        color: #fff;
-    }
-
-    .cyber-filter-subpanel {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        background: rgba(13, 20, 36, 0.5);
-        padding: 12px;
-        border: 1px solid #101c38;
-        border-radius: 4px;
-    }
-
-    .filter-row-controls {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 10px;
-    }
-
-    .input-mini {
-        padding: 6px 10px !important;
-        font-size: 0.8rem;
-        border-color: #162447;
+        border-color: var(--neon-cyan-dark);
+        background: #ffffff;
+        outline: none;
     }
 
     .locked-node {
-        color: #506690;
-        background: rgba(255, 255, 255, 0.01);
-        border-color: #0d162d;
-    }
-
-    .cyber-mini-table {
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 0.85rem;
-        background: rgba(4, 7, 16, 0.6);
-    }
-
-    .cyber-mini-table th {
-        background: #0d1424;
-        color: #506690;
-        border: 1px solid #101c38;
-        padding: 10px;
-        text-align: left;
-    }
-
-    .cyber-mini-table td {
-        border: 1px solid #101c38;
-        padding: 10px;
-        color: #cbd5e1;
-    }
-
-    .cyber-mini-table tr:hover {
-        background: rgba(0, 242, 255, 0.02);
-        cursor: pointer;
+        color: var(--text-cyber-muted);
+        background: #e2e8f0;
+        cursor: not-allowed;
     }
 
     .cyber-hr {
         border: 0;
-        border-top: 1px solid rgba(255, 255, 255, 0.05);
-        margin: 20px 0;
+        border-top: 1px solid var(--border-cyber-subtle);
+        margin: 15px 0;
     }
 
-    .cyber-disabled-form {
-        opacity: 0.4;
-        pointer-events: none;
-        transition: opacity 0.3s;
-    }
-
-    .cyber-active-form {
-        opacity: 1 !important;
-        pointer-events: auto !important;
+    .cyber-textarea {
+        resize: vertical;
+        font-family: 'Share Tech Mono', monospace;
     }
 
     .cyber-input-file {
@@ -329,44 +448,79 @@ $id_usuario_tecnico = $_SESSION['id'] ?? '';
     .cyber-file-trigger {
         display: block;
         width: 100%;
-        padding: 10px;
-        background: rgba(157, 78, 221, 0.05);
-        border: 1px dashed #9d4edd;
-        color: #9d4edd;
+        padding: 8px;
+        background: rgba(2, 132, 199, 0.05);
+        border: 1px dashed var(--neon-cyan-dark);
+        color: var(--neon-cyan-dark);
         text-align: center;
         border-radius: 4px;
         cursor: pointer;
         transition: all 0.2s;
         box-sizing: border-box;
+        font-weight: bold;
+        font-size: 0.8rem;
     }
 
     .cyber-file-trigger:hover {
-        background: rgba(157, 78, 221, 0.15);
-        box-shadow: 0 0 8px rgba(157, 78, 221, 0.3);
+        background: rgba(2, 132, 199, 0.15);
+    }
+
+    .cyber-modal-footer {
+        border-top: 1px solid var(--border-cyber-subtle);
+        padding: 12px 20px;
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        background: #f8fafc;
     }
 
     .node-submit-btn {
-        background: rgba(0, 255, 102, 0.1);
-        border: 1px solid #00ff66;
-        color: #00ff66;
-        width: 100%;
-        padding: 12px;
+        background: rgba(2, 132, 199, 0.1);
+        border: 1px solid var(--neon-cyan-dark);
+        color: var(--neon-cyan-dark);
+        padding: 8px 16px;
         font-family: 'Share Tech Mono', monospace;
         font-weight: bold;
         cursor: pointer;
+        border-radius: 4px;
         transition: all 0.2s;
     }
 
-    .node-submit-btn:hover:not([disabled]) {
-        background: rgba(0, 255, 102, 0.2);
-        box-shadow: 0 0 10px rgba(0, 255, 102, 0.4);
+    .node-submit-btn:hover {
+        background: var(--neon-cyan-dark);
+        color: #ffffff;
     }
 
-    .node-submit-btn:disabled {
-        border-color: #506690;
-        color: #506690;
+    .btn-cyber-cancel {
         background: transparent;
-        cursor: not-allowed;
+        border: 1px solid var(--border-cyber-subtle);
+        color: var(--text-cyber-muted);
+        padding: 8px 16px;
+        font-family: 'Share Tech Mono', monospace;
+        font-weight: bold;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .btn-cyber-cancel:hover {
+        border-color: var(--neon-red-dark);
+        color: var(--neon-red-dark);
+    }
+
+    .text-center {
+        text-align: center;
+    }
+
+    .mt-1 {
+        margin-top: 0.25rem;
+    }
+
+    .mt-3 {
+        margin-top: 1rem;
+    }
+
+    .mt-4 {
+        margin-top: 1.5rem;
     }
 </style>
 

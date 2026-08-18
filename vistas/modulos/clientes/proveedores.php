@@ -13,74 +13,54 @@ if (session_status() === PHP_SESSION_NONE) {
     </header>
 
     <section class="cyber-content mt-4">
-        <div class="cyber-grid-three-columns">
 
-            <div class="cyber-panel-card glass-panel-neon border-neon-yellow">
-                <div class="panel-cyber-header">
-                    <h4><span class="yellow-accent">//</span> REGISTRAR / EDITAR PROVEEDOR</h4>
+        <!-- PANEL PRINCIPAL DE LA TABLA DE PROVEEDORES -->
+        <div class="cyber-panel-card glass-panel-neon border-neon-cyan">
+
+            <!-- BARRA SUPERIOR: Buscador y Botón Agregar -->
+            <div class="panel-cyber-header flex-header-toolbar">
+                <div class="cyber-search-box">
+                    <i class="fa fa-search search-icon-hud"></i>
+                    <input type="text" id="buscarProveedor" class="cyber-input-search"
+                        placeholder="🔍 Buscar por nombre, marca o contacto...">
                 </div>
-                <form id="formProveedor" class="panel-cyber-body-stats font-mono mt-3" autocomplete="off" method="POST"
-                    onsubmit="return false;">
-                    <input type="hidden" name="id" id="proveedor_id">
 
-                    <div class="cyber-form-group">
-                        <label class="node-label">NOMBRE DEL PROVEEDOR / MARCA:</label>
-                        <input type="text" name="nombre" id="proveedor_nombre" class="cyber-input"
-                            placeholder="ej: ASUS Paraguay / Service Oficial" required>
-                    </div>
-
-                    <div class="cyber-form-group">
-                        <label class="node-label">CONTACTO (TELÉFONO / EMAIL / PERSONA):</label>
-                        <input type="text" name="contacto" id="proveedor_contacto" class="cyber-input"
-                            placeholder="ej: Ing. Gómez - 0981111222" required>
-                    </div>
-
-                    <button type="submit" id="btnGuardarProveedor" class="node-submit-btn text-neon-yellow">
-                        [INJECT_SUPPLIER_NODE]
-                    </button>
-                    <button type="button" id="btnCancelarEdicionProv" class="node-cancel-btn hidden mt-2">
-                        [CANCEL_EDIT]
-                    </button>
-                </form>
+                <button type="button" class="btn-cyber-add" id="btnNuevoProveedor">
+                    <i class="fa fa-plus"></i> [+ AGREGAR PROVEEDOR]
+                </button>
             </div>
 
-            <div class="cyber-panel-card glass-panel-neon border-neon-cyan table-span-2">
-                <div class="panel-cyber-header flex-header">
-                    <h4><span class="cyan-accent">//</span> REGISTROS EN TABLA: `proveedores`</h4>
-                    <div class="cyber-search-box">
-                        <input type="text" id="buscarProveedor" class="cyber-input-search"
-                            placeholder="🔍 Buscar proveedor o contacto...">
-                    </div>
-                </div>
-                <div class="panel-cyber-body-table mt-3">
-                    <table class="cyber-mini-table" id="tablaProveedores">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Nombre / Marca</th>
-                                <th>Información de Contacto</th>
-                                <th>Fecha Alta</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
-                </div>
+            <!-- TABLA DE PROVEEDORES -->
+            <div class="panel-cyber-body-table mt-3 font-mono">
+                <table class="cyber-mini-table" id="tablaProveedores">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre / Marca</th>
+                            <th>Información de Contacto</th>
+                            <th>Fecha Alta</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Carga dinámica vía JS -->
+                    </tbody>
+                </table>
             </div>
 
         </div>
 
+        <!-- PANEL DESPLEGABLE: HISTORIAL DE EQUIPOS DERIVADOS -->
         <div class="cyber-panel-card glass-panel-neon border-neon-purple mt-4" id="panelHistorialProveedor"
             style="display: none;">
-            <div class="panel-cyber-header flex-header">
+            <div class="panel-cyber-header flex-header-toolbar">
                 <h4>
                     <span class="purple-accent">//</span> EQUIPOS DERIVADOS A SERVICE OFICIAL —
-                    <span id="labelProveedorNombre" class="text-white font-mono">SELECCIONE UN PROVEEDOR</span>
+                    <span id="labelProveedorNombre" class="t-cyan font-mono">SELECCIONE UN PROVEEDOR</span>
                 </h4>
             </div>
 
-            <div class="panel-cyber-body-table mt-3">
+            <div class="panel-cyber-body-table mt-3 font-mono">
                 <table class="cyber-mini-table" id="tablaHistorialProvRma">
                     <thead>
                         <tr>
@@ -93,32 +73,99 @@ if (session_status() === PHP_SESSION_NONE) {
                         </tr>
                     </thead>
                     <tbody>
+                        <!-- Carga dinámica vía JS -->
                     </tbody>
                 </table>
             </div>
         </div>
+
     </section>
+</div>
+
+<!-- ==========================================
+     MODAL EMERGENTE: REGISTRAR / EDITAR PROVEEDOR (NATIVO)
+========================================== -->
+<div class="custom-cyber-modal-overlay" id="modalProveedorOverlay" style="display: none;">
+    <div class="custom-cyber-modal-container border-neon-blue">
+
+        <div class="cyber-modal-header">
+            <button type="button" class="text-cyber-close" id="btnCerrarModalX">&times;</button>
+            <h4 class="modal-title font-mono" id="modalProveedorLabel">
+                <span class="cyan-accent">//</span> <span id="lblTituloModal">[INJECT_SUPPLIER_NODE]</span>
+            </h4>
+        </div>
+
+        <form id="formProveedor" autocomplete="off" method="POST" onsubmit="return false;">
+            <div class="modal-body font-mono">
+                <input type="hidden" name="id" id="proveedor_id">
+
+                <div class="cyber-form-group">
+                    <label class="node-label">NOMBRE DEL PROVEEDOR / MARCA:</label>
+                    <input type="text" name="nombre" id="proveedor_nombre" class="cyber-input"
+                        placeholder="ej: ASUS Paraguay / Service Oficial" required>
+                </div>
+
+                <div class="cyber-form-group">
+                    <label class="node-label">CONTACTO (TELÉFONO / EMAIL / PERSONA):</label>
+                    <input type="text" name="contacto" id="proveedor_contacto" class="cyber-input"
+                        placeholder="ej: Ing. Gómez - 0981111222" required>
+                </div>
+            </div>
+
+            <div class="modal-footer cyber-modal-footer">
+                <button type="button" class="btn-cyber-cancel hidden" id="btnCancelarModal">[CANCEL_EDIT]</button>
+                <button type="submit" id="btnGuardarProveedor"
+                    class="node-submit-btn text-neon-blue">[EXECUTE_DEPLOYMENT]</button>
+            </div>
+        </form>
+
+    </div>
 </div>
 
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@500;600;700&display=swap');
 
+    :root {
+        --bg-cyber-light: #f0f4f8;
+        --card-cyber-light: #ffffff;
+        --border-cyber-subtle: #cbd5e1;
+        --text-cyber-dark: #0f172a;
+        --text-cyber-muted: #475569;
+
+        --neon-cyan-dark: #0284c7;
+        --neon-cyan-glow: #00b4d8;
+        --neon-green-dark: #15803d;
+        --neon-red-dark: #dc2626;
+        --neon-purple-dark: #7e22ce;
+        --neon-yellow-dark: #d97706;
+    }
+
+    .hidden {
+        display: none !important;
+    }
+
     .dashboard-cyber-wrapper {
-        background-color: #060913;
+        background-color: var(--bg-cyber-light);
+        background-image:
+            radial-gradient(circle at 50% 10%, rgba(2, 132, 199, 0.05) 0%, transparent 60%),
+            linear-gradient(rgba(203, 213, 225, 0.2) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(203, 213, 225, 0.2) 1px, transparent 1px);
+        background-size: 100% 100%, 20px 20px, 20px 20px;
         min-height: 100vh;
         padding: 20px;
-        color: #e2e8f0;
+        color: var(--text-cyber-dark);
         font-family: 'Rajdhani', sans-serif;
     }
 
     .cyber-header {
-        background-color: rgba(6, 11, 25, 0.9);
-        border-bottom: 2px solid #101c38;
+        background-color: #ffffff;
+        border-bottom: 2px solid var(--neon-cyan-dark);
         padding: 15px 25px;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        border-radius: 4px;
+        border-radius: 6px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
     }
 
     .header-brand-glitch {
@@ -130,7 +177,7 @@ if (session_status() === PHP_SESSION_NONE) {
     .header-brand-glitch h2 {
         font-size: 1.2rem;
         font-weight: 700;
-        color: #fff;
+        color: var(--text-cyber-dark);
         margin: 0;
         letter-spacing: 0.5px;
     }
@@ -138,149 +185,92 @@ if (session_status() === PHP_SESSION_NONE) {
     .system-badge-live {
         font-family: 'Share Tech Mono', monospace;
         font-size: 0.65rem;
-        border: 1px solid #ffca28;
-        color: #ffca28;
-        padding: 2px 6px;
+        border: 1px solid var(--neon-cyan-dark);
+        color: var(--neon-cyan-dark);
+        background: rgba(2, 132, 199, 0.08);
+        padding: 2px 8px;
         border-radius: 4px;
-    }
-
-    .cyber-grid-three-columns {
-        display: grid;
-        grid-template-columns: 1fr 2fr;
-        gap: 20px;
-    }
-
-    @media(max-width: 992px) {
-        .cyber-grid-three-columns {
-            grid-template-columns: 1fr;
-        }
-
-        .table-span-2 {
-            grid-column: span 1 !important;
-        }
+        font-weight: bold;
     }
 
     .cyber-panel-card {
-        background: rgba(10, 16, 32, 0.6);
-        border: 1px solid rgba(255, 255, 255, 0.04);
-        backdrop-filter: blur(10px);
+        background: var(--card-cyber-light);
+        border: 1px solid var(--border-cyber-subtle);
         border-radius: 8px;
         padding: 20px;
-    }
-
-    .border-neon-yellow {
-        border-left: 3px solid #ffca28;
+        box-shadow: 0 10px 25px rgba(15, 23, 42, 0.04);
     }
 
     .border-neon-cyan {
-        border-left: 3px solid #00b4d8;
+        border-left: 4px solid var(--neon-cyan-dark);
+    }
+
+    .border-neon-blue {
+        border-left: 4px solid var(--neon-cyan-glow);
     }
 
     .border-neon-purple {
-        border-left: 3px solid #9d4edd;
+        border-left: 4px solid var(--neon-purple-dark);
     }
 
-    .panel-cyber-header h4 {
-        font-size: 0.95rem;
-        font-weight: 700;
-        color: #fff;
-        margin: 0;
-    }
-
-    .flex-header {
+    .flex-header-toolbar {
         display: flex;
         justify-content: space-between;
         align-items: center;
+        gap: 15px;
+        flex-wrap: wrap;
     }
 
-    .yellow-accent {
-        color: #ffca28;
-        margin-right: 5px;
+    .cyber-search-box {
+        position: relative;
+        flex: 1;
+        max-width: 400px;
     }
 
-    .cyan-accent {
-        color: #00f2ff;
-        margin-right: 5px;
-    }
-
-    .purple-accent {
-        color: #9d4edd;
-        margin-right: 5px;
-    }
-
-    .font-mono {
-        font-family: 'Share Tech Mono', monospace;
-    }
-
-    .cyber-form-group {
-        margin-bottom: 15px;
-    }
-
-    .node-label {
-        color: #506690;
-        font-size: 0.75rem;
-        display: block;
-        margin-bottom: 5px;
-    }
-
-    .cyber-input {
-        width: 100%;
-        background: #03050c;
-        border: 1px solid #101c38;
-        color: #fff;
-        padding: 8px 12px;
-        font-family: monospace;
-        border-radius: 4px;
-        box-sizing: border-box;
-    }
-
-    .cyber-input:focus {
-        border-color: #ffca28;
-        outline: none;
+    .search-icon-hud {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--text-cyber-muted);
     }
 
     .cyber-input-search {
-        background: #03050c;
-        border: 1px solid #101c38;
-        color: #00f2ff;
-        padding: 6px 12px;
+        width: 100%;
+        background: #f8fafc;
+        border: 1px solid var(--border-cyber-subtle);
+        color: var(--text-cyber-dark);
+        padding: 8px 12px 8px 35px;
         font-family: 'Share Tech Mono', monospace;
-        font-size: 0.8rem;
+        font-size: 0.85rem;
         border-radius: 4px;
-        width: 240px;
+        transition: all 0.2s;
     }
 
-    .node-submit-btn {
-        background: rgba(255, 202, 40, 0.1);
-        border: 1px solid #ffca28;
-        color: #ffca28;
-        width: 100%;
-        padding: 10px;
+    .cyber-input-search:focus {
+        border-color: var(--neon-cyan-dark);
+        background: #ffffff;
+        box-shadow: 0 0 10px rgba(2, 132, 199, 0.15);
+        outline: none;
+    }
+
+    .btn-cyber-add {
+        background: rgba(2, 132, 199, 0.1);
+        border: 1px solid var(--neon-cyan-dark);
+        color: var(--neon-cyan-dark);
+        padding: 8px 16px;
         font-family: 'Share Tech Mono', monospace;
         font-weight: bold;
+        font-size: 0.85rem;
+        border-radius: 4px;
         cursor: pointer;
         transition: all 0.2s;
-        margin-top: 10px;
     }
 
-    .node-submit-btn:hover {
-        background: rgba(255, 202, 40, 0.2);
-        box-shadow: 0 0 10px rgba(255, 202, 40, 0.4);
-    }
-
-    .node-cancel-btn {
-        background: rgba(255, 51, 51, 0.1);
-        border: 1px solid #ff3333;
-        color: #ff3333;
-        width: 100%;
-        padding: 8px;
-        font-family: 'Share Tech Mono', monospace;
-        font-weight: bold;
-        cursor: pointer;
-    }
-
-    .hidden {
-        display: none;
+    .btn-cyber-add:hover {
+        background: var(--neon-cyan-dark);
+        color: #ffffff;
+        box-shadow: 0 0 12px rgba(2, 132, 199, 0.3);
     }
 
     .panel-cyber-body-table {
@@ -290,82 +280,219 @@ if (session_status() === PHP_SESSION_NONE) {
     .cyber-mini-table {
         width: 100%;
         border-collapse: collapse;
-        font-size: 0.85rem;
+        font-size: 0.88rem;
     }
 
     .cyber-mini-table th {
         font-family: 'Share Tech Mono', monospace;
         font-size: 0.75rem;
-        color: #516995;
-        padding: 8px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        color: var(--text-cyber-muted);
+        padding: 12px 8px;
+        border-bottom: 2px solid var(--border-cyber-subtle);
         text-transform: uppercase;
         text-align: center;
+        background: #f8fafc;
     }
 
     .cyber-mini-table td {
-        padding: 10px 8px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.02);
-        color: #cbd5e1;
+        padding: 12px 8px;
+        border-bottom: 1px solid #f1f5f9;
+        color: var(--text-cyber-dark);
         text-align: center;
     }
 
+    .font-mono {
+        font-family: 'Share Tech Mono', monospace;
+    }
+
+    .cyan-accent {
+        color: var(--neon-cyan-dark);
+        font-weight: bold;
+    }
+
+    .purple-accent {
+        color: var(--neon-purple-dark);
+        font-weight: bold;
+    }
+
     .t-cyan {
-        color: #00b4d8;
-    }
-
-    .text-white {
-        color: #fff;
-    }
-
-    .text-neon-yellow {
-        color: #ffca28;
-    }
-
-    .text-neon-red {
-        color: #ff3333;
-    }
-
-    .badge-status {
-        padding: 2px 8px;
-        border-radius: 4px;
-        font-size: 0.72rem;
-        font-weight: 600;
-    }
-
-    .badge-ready {
-        background: rgba(0, 255, 102, 0.1);
-        color: #00ff66;
-        border: 1px solid rgba(0, 255, 102, 0.2);
+        color: var(--neon-cyan-dark);
+        font-weight: bold;
     }
 
     .btn-terminal-view,
     .btn-terminal-edit,
     .btn-terminal-delete {
         background: transparent;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        color: #a2b4cd;
-        padding: 4px 8px;
+        border: 1px solid var(--border-cyber-subtle);
+        color: var(--text-cyber-muted);
+        padding: 5px 10px;
         border-radius: 4px;
         cursor: pointer;
         font-size: 0.75rem;
+        font-family: 'Share Tech Mono', monospace;
+        transition: all 0.2s;
         margin: 0 2px;
     }
 
     .btn-terminal-view:hover {
-        color: #9d4edd;
-        border-color: #9d4edd;
-        box-shadow: 0 0 5px rgba(157, 78, 221, 0.4);
+        color: var(--neon-purple-dark);
+        border-color: var(--neon-purple-dark);
+        background: rgba(126, 34, 206, 0.08);
     }
 
     .btn-terminal-edit:hover {
-        color: #00f2ff;
-        border-color: #00f2ff;
+        color: var(--neon-cyan-dark);
+        border-color: var(--neon-cyan-dark);
+        background: rgba(2, 132, 199, 0.08);
     }
 
     .btn-terminal-delete:hover {
-        color: #ff3333;
-        border-color: #ff3333;
+        color: var(--neon-red-dark);
+        border-color: var(--neon-red-dark);
+        background: rgba(220, 38, 38, 0.08);
+    }
+
+    /* MODAL NATIVO ESTÁNDAR */
+    .custom-cyber-modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(15, 23, 42, 0.6);
+        backdrop-filter: blur(4px);
+        z-index: 99999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .custom-cyber-modal-container {
+        background: #ffffff;
+        width: 100%;
+        max-width: 500px;
+        border-radius: 8px;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        border: 1px solid var(--border-cyber-subtle);
+        overflow: hidden;
+        animation: fadeInModal 0.2s ease-out;
+    }
+
+    @keyframes fadeInModal {
+        from {
+            opacity: 0;
+            transform: scale(0.95);
+        }
+
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    .cyber-modal-header {
+        border-bottom: 1px solid var(--border-cyber-subtle);
+        padding: 15px 20px;
+        background: #f8fafc;
+    }
+
+    .text-cyber-close {
+        color: var(--text-cyber-muted);
+        font-size: 1.5rem;
+        float: right;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        line-height: 1;
+    }
+
+    .text-cyber-close:hover {
+        color: var(--neon-red-dark);
+    }
+
+    .modal-body {
+        padding: 20px;
+    }
+
+    .cyber-form-group {
+        margin-bottom: 15px;
+    }
+
+    .node-label {
+        color: var(--text-cyber-muted);
+        font-size: 0.75rem;
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+
+    .cyber-input {
+        width: 100%;
+        background: #f8fafc;
+        border: 1px solid var(--border-cyber-subtle);
+        color: var(--text-cyber-dark);
+        padding: 8px 12px;
+        font-family: monospace;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+
+    .cyber-input:focus {
+        border-color: var(--neon-cyan-dark);
+        background: #ffffff;
+        outline: none;
+    }
+
+    .cyber-modal-footer {
+        border-top: 1px solid var(--border-cyber-subtle);
+        padding: 12px 20px;
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        background: #f8fafc;
+    }
+
+    .node-submit-btn {
+        background: rgba(2, 132, 199, 0.1);
+        border: 1px solid var(--neon-cyan-dark);
+        color: var(--neon-cyan-dark);
+        padding: 8px 16px;
+        font-family: 'Share Tech Mono', monospace;
+        font-weight: bold;
+        cursor: pointer;
+        border-radius: 4px;
+        transition: all 0.2s;
+    }
+
+    .node-submit-btn:hover {
+        background: var(--neon-cyan-dark);
+        color: #ffffff;
+        box-shadow: 0 0 10px rgba(2, 132, 199, 0.3);
+    }
+
+    .btn-cyber-cancel {
+        background: transparent;
+        border: 1px solid var(--border-cyber-subtle);
+        color: var(--text-cyber-muted);
+        padding: 8px 16px;
+        font-family: 'Share Tech Mono', monospace;
+        font-weight: bold;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .btn-cyber-cancel:hover {
+        border-color: var(--neon-red-dark);
+        color: var(--neon-red-dark);
+    }
+
+    .mt-3 {
+        margin-top: 1rem;
+    }
+
+    .mt-4 {
+        margin-top: 1.5rem;
     }
 </style>
 

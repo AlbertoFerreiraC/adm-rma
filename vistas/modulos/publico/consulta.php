@@ -32,13 +32,13 @@
 
         <!-- HERO SEARCH SECTION -->
         <section class="search-hero-card glass-panel-neon">
-            <div class="hero-badge">TRACKING_SYSTEM_v5.0</div>
+            <span class="hero-badge">TRACKING_SYSTEM_v5.0</span>
             <h2>CONSULTA EL ESTADO DE TU EQUIPO EN TALLER</h2>
             <p>Ingresa tu número de orden de servicio (ej: <strong>RMA-0247</strong>), número de serie o tu cédula.</p>
 
             <form id="formConsultaPublica" class="search-form" autocomplete="off" onsubmit="return false;">
                 <div class="search-input-wrapper">
-                    <i class="fa fa-search search-icon"></i>
+                    <i class="fa fa-search search-icon-hud"></i>
                     <input type="text" id="inputTracking" class="cyber-search-input"
                         placeholder="INGRESA TU N° DE CASO, SERIE O CÉDULA..." required>
                     <button type="submit" id="btnBuscarCaso" class="btn-search-trigger">
@@ -56,11 +56,11 @@
                 <div class="result-header-flex">
                     <div>
                         <span class="node-label">CÓDIGO DE SEGUIMIENTO</span>
-                        <h3 id="txtNumeroCaso" class="neon-text-blue font-mono m-0">RMA-0000</h3>
+                        <h3 id="txtNumeroCaso" class="t-cyan font-mono m-0">RMA-0000</h3>
                     </div>
                     <div class="text-right">
                         <span class="node-label">ESTADO ACTUAL EN TALLER</span>
-                        <div id="badgeEstadoActual" class="badge-status-lg badge-diag">-</div>
+                        <div id="badgeEstadoActual" class="badge-status-lg status-1">-</div>
                     </div>
                 </div>
             </div>
@@ -87,7 +87,7 @@
                         </div>
                         <div class="spec-item">
                             <span class="spec-label">NÚMERO DE SERIE:</span>
-                            <span id="txtNumeroSerie" class="spec-value text-cyan">-</span>
+                            <span id="txtNumeroSerie" class="spec-value t-cyan">-</span>
                         </div>
                         <div class="spec-item">
                             <span class="spec-label">TIPO DE SERVICIO:</span>
@@ -99,7 +99,7 @@
                         </div>
                         <div class="spec-item">
                             <span class="spec-label">FECHA CIERRE / ENTREGA:</span>
-                            <span id="txtFechaCierre" class="spec-value text-green">-</span>
+                            <span id="txtFechaCierre" class="spec-value green-accent">-</span>
                         </div>
                     </div>
 
@@ -111,7 +111,7 @@
                     </div>
 
                     <div class="problem-box mt-3">
-                        <span class="node-label" style="color: var(--neon-green);">DIAGNÓSTICO DEL TÉCNICO:</span>
+                        <span class="node-label text-yellow">// DIAGNÓSTICO DEL TÉCNICO:</span>
                         <p id="txtDiagnosticoFinal" class="desc-text text-white font-mono">-</p>
                     </div>
 
@@ -128,7 +128,7 @@
                         <h4><span class="purple-accent">//</span> LÍNEA DE TIEMPO DEL PROCESO</h4>
                     </div>
 
-                    <div class="timeline-container mt-3" id="timelineContenedor">
+                    <div class="timeline-container mt-3 font-mono" id="timelineContenedor">
                         <!-- Carga dinámica del historial de estados -->
                     </div>
                 </div>
@@ -142,23 +142,29 @@
         @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@500;600;700&display=swap');
 
         :root {
-            --cyber-bg: #040711;
-            --glass-bg: rgba(10, 16, 32, 0.75);
-            --neon-blue: #00f2ff;
-            --neon-yellow: #ffca28;
-            --neon-green: #00ff66;
-            --neon-purple: #9d4edd;
-            --neon-cyan: #00b4d8;
-            --neon-red: #ff3333;
+            --bg-cyber-light: #f0f4f8;
+            --card-cyber-light: #ffffff;
+            --border-cyber-subtle: #cbd5e1;
+            --text-cyber-dark: #0f172a;
+            --text-cyber-muted: #475569;
+
+            --neon-cyan-dark: #0284c7;
+            --neon-cyan-glow: #00b4d8;
+            --neon-green-dark: #15803d;
+            --neon-red-dark: #dc2626;
+            --neon-purple-dark: #7e22ce;
+            --neon-yellow-dark: #d97706;
         }
 
         body.public-portal-body {
-            background-color: var(--cyber-bg);
+            background-color: var(--bg-cyber-light);
             background-image:
-                radial-gradient(circle at 50% 10%, rgba(0, 242, 255, 0.08) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(157, 78, 221, 0.05) 0%, transparent 50%);
+                radial-gradient(circle at 50% 10%, rgba(2, 132, 199, 0.05) 0%, transparent 60%),
+                linear-gradient(rgba(203, 213, 225, 0.2) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(203, 213, 225, 0.2) 1px, transparent 1px);
+            background-size: 100% 100%, 20px 20px, 20px 20px;
             min-height: 100vh;
-            color: #e2e8f0;
+            color: var(--text-cyber-dark);
             font-family: 'Rajdhani', sans-serif;
             margin: 0;
             padding-bottom: 50px;
@@ -166,13 +172,13 @@
 
         /* HEADER E-COMMERCE STYLE */
         .public-navbar {
-            background: rgba(6, 11, 25, 0.95);
-            border-bottom: 1px solid rgba(0, 242, 255, 0.2);
+            background: #ffffff;
+            border-bottom: 2px solid var(--neon-cyan-dark);
             padding: 15px 40px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
         }
 
         .brand-container {
@@ -188,7 +194,7 @@
         .brand-title h1 {
             font-size: 1.3rem;
             font-weight: 700;
-            color: #fff;
+            color: var(--text-cyber-dark);
             margin: 0;
             letter-spacing: 1px;
         }
@@ -196,26 +202,28 @@
         .sub-brand {
             font-family: 'Share Tech Mono', monospace;
             font-size: 0.65rem;
-            color: var(--neon-blue);
+            color: var(--neon-cyan-dark);
             letter-spacing: 2px;
+            font-weight: bold;
         }
 
         .btn-staff-login {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            color: #a2b4cd;
+            background: rgba(2, 132, 199, 0.08);
+            border: 1px solid var(--border-cyber-subtle);
+            color: var(--text-cyber-muted);
             padding: 8px 16px;
             border-radius: 4px;
             font-family: 'Share Tech Mono', monospace;
             font-size: 0.8rem;
             text-decoration: none;
             transition: all 0.2s;
+            font-weight: bold;
         }
 
         .btn-staff-login:hover {
-            color: var(--neon-blue);
-            border-color: var(--neon-blue);
-            box-shadow: 0 0 10px rgba(0, 242, 255, 0.3);
+            color: var(--neon-cyan-dark);
+            border-color: var(--neon-cyan-dark);
+            background: rgba(2, 132, 199, 0.15);
             text-decoration: none;
         }
 
@@ -228,13 +236,12 @@
 
         /* HERO CARD */
         .search-hero-card {
-            background: var(--glass-bg);
-            border: 1px solid rgba(0, 242, 255, 0.15);
+            background: var(--card-cyber-light);
+            border: 1px solid var(--border-cyber-subtle);
             border-radius: 12px;
             padding: 40px;
             text-align: center;
-            backdrop-filter: blur(12px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 10px 25px rgba(15, 23, 42, 0.04);
             position: relative;
             overflow: hidden;
         }
@@ -243,23 +250,24 @@
             display: inline-block;
             font-family: 'Share Tech Mono', monospace;
             font-size: 0.7rem;
-            color: var(--neon-green);
-            border: 1px solid rgba(0, 255, 102, 0.3);
+            color: var(--neon-green-dark);
+            border: 1px solid var(--neon-green-dark);
             padding: 2px 10px;
             border-radius: 20px;
             margin-bottom: 15px;
-            background: rgba(0, 255, 102, 0.05);
+            background: rgba(21, 128, 61, 0.08);
+            font-weight: bold;
         }
 
         .search-hero-card h2 {
             font-size: 1.8rem;
             font-weight: 700;
-            color: #fff;
+            color: var(--text-cyber-dark);
             margin: 0 0 10px 0;
         }
 
         .search-hero-card p {
-            color: #a2b4cd;
+            color: var(--text-cyber-muted);
             font-size: 1rem;
             margin-bottom: 25px;
         }
@@ -272,20 +280,21 @@
         .search-input-wrapper {
             display: flex;
             align-items: center;
-            background: #03050c;
-            border: 1px solid #101c38;
+            background: #f8fafc;
+            border: 1px solid var(--border-cyber-subtle);
             border-radius: 6px;
             padding: 4px 6px;
             transition: all 0.3s;
         }
 
         .search-input-wrapper:focus-within {
-            border-color: var(--neon-blue);
-            box-shadow: 0 0 15px rgba(0, 242, 255, 0.25);
+            border-color: var(--neon-cyan-dark);
+            box-shadow: 0 0 15px rgba(2, 132, 199, 0.15);
+            background: #ffffff;
         }
 
-        .search-icon {
-            color: #506690;
+        .search-icon-hud {
+            color: var(--text-cyber-muted);
             margin-left: 15px;
             font-size: 1.1rem;
         }
@@ -294,7 +303,7 @@
             flex: 1;
             background: transparent;
             border: none;
-            color: #fff;
+            color: var(--text-cyber-dark);
             padding: 12px 15px;
             font-family: 'Share Tech Mono', monospace;
             font-size: 0.95rem;
@@ -305,9 +314,9 @@
         }
 
         .btn-search-trigger {
-            background: rgba(0, 242, 255, 0.15);
-            border: 1px solid var(--neon-blue);
-            color: var(--neon-blue);
+            background: rgba(2, 132, 199, 0.1);
+            border: 1px solid var(--neon-cyan-dark);
+            color: var(--neon-cyan-dark);
             padding: 12px 24px;
             font-family: 'Share Tech Mono', monospace;
             font-weight: bold;
@@ -317,8 +326,9 @@
         }
 
         .btn-search-trigger:hover {
-            background: rgba(0, 242, 255, 0.3);
-            box-shadow: 0 0 12px rgba(0, 242, 255, 0.5);
+            background: var(--neon-cyan-dark);
+            color: #ffffff;
+            box-shadow: 0 0 12px rgba(2, 132, 199, 0.3);
         }
 
         /* RESULT SECTION */
@@ -331,23 +341,23 @@
         }
 
         .cyber-panel-card {
-            background: var(--glass-bg);
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            background: var(--card-cyber-light);
+            border: 1px solid var(--border-cyber-subtle);
             border-radius: 8px;
             padding: 25px;
-            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 25px rgba(15, 23, 42, 0.04);
         }
 
         .border-neon-cyan {
-            border-left: 4px solid var(--neon-cyan);
+            border-left: 4px solid var(--neon-cyan-dark);
         }
 
         .border-neon-blue {
-            border-left: 4px solid var(--neon-blue);
+            border-left: 4px solid var(--neon-cyan-glow);
         }
 
         .border-neon-purple {
-            border-left: 4px solid var(--neon-purple);
+            border-left: 4px solid var(--neon-purple-dark);
         }
 
         .result-header-flex {
@@ -359,9 +369,10 @@
         .node-label {
             font-family: 'Share Tech Mono', monospace;
             font-size: 0.7rem;
-            color: #506690;
+            color: var(--text-cyber-muted);
             display: block;
             margin-bottom: 4px;
+            font-weight: bold;
         }
 
         .badge-status-lg {
@@ -371,18 +382,13 @@
             font-size: 0.9rem;
             font-weight: bold;
             display: inline-block;
+            border: 1px solid;
         }
 
-        .badge-diag {
-            background: rgba(0, 242, 255, 0.1);
-            color: var(--neon-blue);
-            border: 1px solid rgba(0, 242, 255, 0.3);
-        }
-
-        .badge-ready {
-            background: rgba(0, 255, 102, 0.1);
-            color: var(--neon-green);
-            border: 1px solid rgba(0, 255, 102, 0.3);
+        .status-1 {
+            background: rgba(2, 132, 199, 0.08);
+            color: var(--neon-cyan-dark);
+            border-color: rgba(2, 132, 199, 0.3);
         }
 
         .portal-grid-two {
@@ -400,16 +406,28 @@
         .panel-cyber-header h4 {
             font-size: 1rem;
             font-weight: 700;
-            color: #fff;
+            color: var(--text-cyber-dark);
             margin: 0;
         }
 
         .cyan-accent {
-            color: var(--neon-blue);
+            color: var(--neon-cyan-dark);
+            font-weight: bold;
         }
 
         .purple-accent {
-            color: var(--neon-purple);
+            color: var(--neon-purple-dark);
+            font-weight: bold;
+        }
+
+        .green-accent {
+            color: var(--neon-green-dark);
+            font-weight: bold;
+        }
+
+        .text-yellow {
+            color: var(--neon-yellow-dark);
+            font-weight: bold;
         }
 
         .spec-list {
@@ -422,56 +440,48 @@
         .spec-item {
             display: flex;
             justify-content: space-between;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            border-bottom: 1px solid #f1f5f9;
             padding-bottom: 6px;
         }
 
         .spec-label {
-            color: #617594;
+            color: var(--text-cyber-muted);
         }
 
         .spec-value {
-            color: #e2e8f0;
+            color: var(--text-cyber-dark);
             font-weight: bold;
         }
 
         .text-white {
-            color: #fff !important;
+            color: var(--text-cyber-dark) !important;
         }
 
-        .text-cyan {
-            color: var(--neon-cyan) !important;
-        }
-
-        .text-green {
-            color: var(--neon-green) !important;
-        }
-
-        .neon-text-blue {
-            color: var(--neon-blue);
-            text-shadow: 0 0 8px rgba(0, 242, 255, 0.3);
+        .t-cyan {
+            color: var(--neon-cyan-dark) !important;
+            font-weight: bold;
         }
 
         .cyber-hr {
             border: 0;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            border-top: 1px solid var(--border-cyber-subtle);
             margin: 18px 0;
         }
 
         .desc-text {
-            background: rgba(0, 0, 0, 0.3);
+            background: #f8fafc;
             padding: 10px;
             border-radius: 4px;
-            border: 1px solid rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-cyber-subtle);
             font-size: 0.88rem;
             margin: 5px 0 0 0;
-            color: #cbd5e1;
+            color: var(--text-cyber-dark);
         }
 
         .btn-print-receipt {
-            background: rgba(157, 78, 221, 0.15);
-            border: 1px solid var(--neon-purple);
-            color: var(--neon-purple);
+            background: rgba(126, 34, 206, 0.08);
+            border: 1px solid var(--neon-purple-dark);
+            color: var(--neon-purple-dark);
             padding: 10px 20px;
             font-family: 'Share Tech Mono', monospace;
             font-weight: bold;
@@ -481,15 +491,16 @@
         }
 
         .btn-print-receipt:hover {
-            background: rgba(157, 78, 221, 0.3);
-            box-shadow: 0 0 10px rgba(157, 78, 221, 0.4);
+            background: var(--neon-purple-dark);
+            color: #ffffff;
+            box-shadow: 0 0 10px rgba(126, 34, 206, 0.3);
         }
 
         /* TIMELINE STYLES */
         .timeline-container {
             position: relative;
             padding-left: 20px;
-            border-left: 2px solid rgba(255, 255, 255, 0.08);
+            border-left: 2px solid var(--border-cyber-subtle);
         }
 
         .timeline-item {
@@ -505,31 +516,59 @@
             width: 10px;
             height: 10px;
             border-radius: 50%;
-            background: var(--neon-purple);
-            box-shadow: 0 0 8px var(--neon-purple);
+            background: var(--neon-purple-dark);
+            box-shadow: 0 0 6px var(--neon-purple-dark);
         }
 
         .timeline-item.active::before {
-            background: var(--neon-green);
-            box-shadow: 0 0 8px var(--neon-green);
+            background: var(--neon-green-dark);
+            box-shadow: 0 0 6px var(--neon-green-dark);
         }
 
         .time-date {
             font-family: 'Share Tech Mono', monospace;
             font-size: 0.72rem;
-            color: #617594;
+            color: var(--text-cyber-muted);
         }
 
         .time-status {
             font-weight: bold;
-            color: #fff;
+            color: var(--text-cyber-dark);
             font-size: 0.95rem;
             margin: 2px 0;
         }
 
         .time-obs {
             font-size: 0.82rem;
-            color: #94a3b8;
+            color: var(--text-cyber-muted);
+        }
+
+        .m-0 {
+            margin: 0 !important;
+        }
+
+        .mb-4 {
+            margin-bottom: 1.5rem;
+        }
+
+        .mt-3 {
+            margin-top: 1rem;
+        }
+
+        .mt-4 {
+            margin-top: 1.5rem;
+        }
+
+        .text-right {
+            text-align: right !important;
+        }
+
+        .text-center {
+            text-align: center !important;
+        }
+
+        .font-mono {
+            font-family: 'Share Tech Mono', monospace;
         }
     </style>
 

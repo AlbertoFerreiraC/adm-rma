@@ -14,11 +14,12 @@ $id_tecnico_sesion = $_SESSION['id'] ?? '';
     </header>
 
     <section class="cyber-content mt-4">
-        <form class="font-mono" method="POST" id="formNuevoCaso" enctype="multipart/form-data">
+        <form class="font-mono" method="POST" id="formNuevoCaso" enctype="multipart/form-data" autocomplete="off">
             <input type="hidden" name="id_tecnico" value="<?php echo $id_tecnico_sesion; ?>">
 
-            <div class="cyber-grid-two-columns">
+            <div class="cyber-grid-two-equal">
 
+                <!-- VECTOR 01: VÍNCULO DE ENTIDAD Y MATRIZ -->
                 <div class="cyber-panel-card glass-panel-neon border-neon-purple">
                     <div class="panel-cyber-header">
                         <h4><span class="purple-accent">//</span> VECTOR 01: VÍNCULO DE ENTIDAD Y MATRIZ</h4>
@@ -34,7 +35,7 @@ $id_tecnico_sesion = $_SESSION['id'] ?? '';
 
                         <div class="cyber-form-group">
                             <label class="node-label">TIPO DE CASO / PROTOCOLO:</label>
-                            <select name="id_tipo_case" id="selectTipoCaso" class="cyber-input" required>
+                            <select name="id_tipo_caso" id="selectTipoCaso" class="cyber-input" required>
                                 <option value="">[SELECCIONE CLASIFICACIÓN]</option>
                             </select>
                         </div>
@@ -48,6 +49,7 @@ $id_tecnico_sesion = $_SESSION['id'] ?? '';
                     </div>
                 </div>
 
+                <!-- VECTOR 02: ESPECIFICACIONES DE COMPONENTE -->
                 <div class="cyber-panel-card glass-panel-neon border-neon-blue">
                     <div class="panel-cyber-header">
                         <h4><span class="cyan-accent">//</span> VECTOR 02: ESPECIFICACIONES DE COMPONENTE</h4>
@@ -83,6 +85,7 @@ $id_tecnico_sesion = $_SESSION['id'] ?? '';
                     </div>
                 </div>
 
+                <!-- VECTOR 03: TELEMETRÍA DE FALLA Y LOGS PRIMARIOS -->
                 <div class="cyber-panel-card glass-panel-neon border-neon-green table-span-2">
                     <div class="panel-cyber-header">
                         <h4><span class="green-accent">//</span> VECTOR 03: TELEMETRÍA DE FALLA Y LOGS PRIMARIOS</h4>
@@ -106,7 +109,7 @@ $id_tecnico_sesion = $_SESSION['id'] ?? '';
                         </div>
 
                         <div class="mt-4">
-                            <button type="submit" class="node-submit-btn text-neon-yellow">
+                            <button type="submit" id="btnGuardarCaso" class="node-submit-btn text-neon-yellow">
                                 [INITIALIZE_RMA_DEPLOYMENT]
                             </button>
                         </div>
@@ -119,44 +122,117 @@ $id_tecnico_sesion = $_SESSION['id'] ?? '';
     </section>
 </div>
 
+<!-- ==========================================
+     MODAL EMERGENTE NATIVO: CONFIRMACIÓN Y TICKET DE CASO DESPLEGADO
+========================================== -->
+<div class="custom-cyber-modal-overlay" id="modalCasoOverlay" style="display: none;">
+    <div class="custom-cyber-modal-container border-neon-blue">
+
+        <div class="cyber-modal-header">
+            <button type="button" class="text-cyber-close" id="btnCerrarModalX">&times;</button>
+            <h4 class="modal-title font-mono">
+                <span class="cyan-accent">//</span> [NODO_DESPLEGADO: <span id="lblNumeroCaso">RMA-0000</span>]
+            </h4>
+        </div>
+
+        <div class="modal-body font-mono text-center">
+            <p class="cyan-accent mb-2">// TRANSMISIÓN Y PERSISTENCIA EXITOSA //</p>
+
+            <!-- TICKET ETIQUETA CONTRASTADA -->
+            <div id="ticket-impresion" class="ticket-etiqueta">
+                <h3 class="ticket-title" id="ticketNumeroCaso">RMA-0000</h3>
+                <img id="ticketQrImg" src="" class="ticket-qr" alt="QR" />
+                <br>
+                <img id="ticketBarcodeImg" src="" class="ticket-barcode" alt="BARCODE" />
+            </div>
+
+            <small class="node-label mt-2">Adhiera la etiqueta física al hardware o abra el comprobante digital.</small>
+        </div>
+
+        <div class="modal-footer cyber-modal-footer">
+            <button type="button" class="btn-cyber-add" id="btnImprimirEtiqueta">
+                <i class="fa fa-print"></i> [PRINT_LABEL]
+            </button>
+            <button type="button" class="node-submit-btn text-neon-blue" id="btnVerComprobantePop">
+                <i class="fa fa-file-pdf-o"></i> [VIEW_RECEIPT]
+            </button>
+        </div>
+
+    </div>
+</div>
+
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@500;600;700&display=swap');
 
+    :root {
+        --bg-cyber-light: #f0f4f8;
+        --card-cyber-light: #ffffff;
+        --border-cyber-subtle: #cbd5e1;
+        --text-cyber-dark: #0f172a;
+        --text-cyber-muted: #475569;
+
+        --neon-cyan-dark: #0284c7;
+        --neon-cyan-glow: #00b4d8;
+        --neon-green-dark: #15803d;
+        --neon-red-dark: #dc2626;
+        --neon-purple-dark: #7e22ce;
+        --neon-yellow-dark: #d97706;
+    }
+
+    .hidden {
+        display: none !important;
+    }
+
     .dashboard-cyber-wrapper {
-        background-color: #060913;
+        background-color: var(--bg-cyber-light);
+        background-image:
+            radial-gradient(circle at 50% 10%, rgba(2, 132, 199, 0.05) 0%, transparent 60%),
+            linear-gradient(rgba(203, 213, 225, 0.2) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(203, 213, 225, 0.2) 1px, transparent 1px);
+        background-size: 100% 100%, 20px 20px, 20px 20px;
         min-height: 100vh;
         padding: 20px;
-        color: #e2e8f0;
+        color: var(--text-cyber-dark);
         font-family: 'Rajdhani', sans-serif;
     }
 
     .cyber-header {
-        background-color: rgba(6, 11, 25, 0.9);
-        border-bottom: 2px solid #101c38;
+        background-color: #ffffff;
+        border-bottom: 2px solid var(--neon-cyan-dark);
         padding: 15px 25px;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        border-radius: 4px;
+        border-radius: 6px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+    }
+
+    .header-brand-glitch {
+        display: flex;
+        align-items: center;
+        gap: 12px;
     }
 
     .header-brand-glitch h2 {
         font-size: 1.2rem;
         font-weight: 700;
-        color: #fff;
+        color: var(--text-cyber-dark);
         margin: 0;
+        letter-spacing: 0.5px;
     }
 
     .system-badge-live {
         font-family: 'Share Tech Mono', monospace;
         font-size: 0.65rem;
-        border: 1px solid #ffca28;
-        color: #ffca28;
-        padding: 2px 6px;
+        border: 1px solid var(--neon-yellow-dark);
+        color: var(--neon-yellow-dark);
+        background: rgba(217, 119, 6, 0.08);
+        padding: 2px 8px;
         border-radius: 4px;
+        font-weight: bold;
     }
 
-    .cyber-grid-three-columns {
+    .cyber-grid-two-equal {
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 20px;
@@ -167,7 +243,7 @@ $id_tecnico_sesion = $_SESSION['id'] ?? '';
     }
 
     @media(max-width: 992px) {
-        .cyber-grid-three-columns {
+        .cyber-grid-two-equal {
             grid-template-columns: 1fr;
         }
 
@@ -177,37 +253,40 @@ $id_tecnico_sesion = $_SESSION['id'] ?? '';
     }
 
     .cyber-panel-card {
-        background: rgba(10, 16, 32, 0.6);
-        border: 1px solid rgba(255, 255, 255, 0.04);
-        backdrop-filter: blur(10px);
+        background: var(--card-cyber-light);
+        border: 1px solid var(--border-cyber-subtle);
         border-radius: 8px;
         padding: 20px;
+        box-shadow: 0 10px 25px rgba(15, 23, 42, 0.04);
     }
 
     .border-neon-purple {
-        border-left: 3px solid #9d4edd;
+        border-left: 4px solid var(--neon-purple-dark);
     }
 
     .border-neon-blue {
-        border-left: 3px solid #00f2ff;
+        border-left: 4px solid var(--neon-cyan-dark);
     }
 
     .border-neon-green {
-        border-left: 3px solid #00ff66;
+        border-left: 4px solid var(--neon-green-dark);
     }
 
     .purple-accent {
-        color: #9d4edd;
+        color: var(--neon-purple-dark);
+        font-weight: bold;
         margin-right: 5px;
     }
 
     .cyan-accent {
-        color: #00f2ff;
+        color: var(--neon-cyan-dark);
+        font-weight: bold;
         margin-right: 5px;
     }
 
     .green-accent {
-        color: #00ff66;
+        color: var(--neon-green-dark);
+        font-weight: bold;
         margin-right: 5px;
     }
 
@@ -220,24 +299,32 @@ $id_tecnico_sesion = $_SESSION['id'] ?? '';
     }
 
     .node-label {
-        color: #506690;
+        color: var(--text-cyber-muted);
         font-size: 0.75rem;
         display: block;
         margin-bottom: 5px;
+        font-weight: bold;
     }
 
     .text-yellow {
-        color: #ffca28;
+        color: var(--neon-yellow-dark);
+        font-weight: bold;
     }
 
     .cyber-input {
         width: 100%;
-        background: #03050c;
-        border: 1px solid #101c38;
-        color: #fff;
-        padding: 10px 12px;
+        background: #f8fafc;
+        border: 1px solid var(--border-cyber-subtle);
+        color: var(--text-cyber-dark);
+        padding: 8px 12px;
+        font-family: monospace;
         border-radius: 4px;
         box-sizing: border-box;
+    }
+
+    .cyber-input:focus {
+        border-color: var(--neon-cyan-dark);
+        background: #ffffff;
         outline: none;
     }
 
@@ -247,14 +334,15 @@ $id_tecnico_sesion = $_SESSION['id'] ?? '';
     }
 
     select.cyber-input option {
-        background: #060913;
-        color: #fff;
+        background: #ffffff;
+        color: var(--text-cyber-dark);
     }
 
     .locked-node {
-        color: #ffca28;
-        background: rgba(255, 202, 40, 0.03);
-        border-color: rgba(255, 202, 40, 0.2);
+        color: var(--neon-yellow-dark);
+        background: #fef3c7;
+        border-color: var(--border-cyber-subtle);
+        font-weight: bold;
     }
 
     .cyber-input-file {
@@ -265,36 +353,62 @@ $id_tecnico_sesion = $_SESSION['id'] ?? '';
         display: block;
         width: 100%;
         padding: 10px;
-        background: rgba(0, 242, 255, 0.05);
-        border: 1px dashed #00f2ff;
-        color: #00f2ff;
+        background: rgba(2, 132, 199, 0.05);
+        border: 1px dashed var(--neon-cyan-dark);
+        color: var(--neon-cyan-dark);
         text-align: center;
         border-radius: 4px;
         cursor: pointer;
         transition: all 0.2s;
         box-sizing: border-box;
+        font-weight: bold;
     }
 
     .cyber-file-trigger:hover {
-        background: rgba(0, 242, 255, 0.15);
-        box-shadow: 0 0 8px rgba(0, 242, 255, 0.3);
+        background: rgba(2, 132, 199, 0.15);
+        box-shadow: 0 0 8px rgba(2, 132, 199, 0.3);
     }
 
     .node-submit-btn {
-        background: rgba(255, 202, 40, 0.1);
-        border: 1px solid #ffca28;
-        color: #ffca28;
+        background: rgba(217, 119, 6, 0.1);
+        border: 1px solid var(--neon-yellow-dark);
+        color: var(--neon-yellow-dark);
         width: 100%;
         padding: 12px;
         font-family: 'Share Tech Mono', monospace;
         font-weight: bold;
         cursor: pointer;
         transition: all 0.2s;
+        border-radius: 4px;
     }
 
     .node-submit-btn:hover {
-        background: rgba(255, 202, 40, 0.2);
-        box-shadow: 0 0 10px rgba(255, 202, 40, 0.4);
+        background: var(--neon-yellow-dark);
+        color: #ffffff;
+        box-shadow: 0 0 10px rgba(217, 119, 6, 0.3);
+    }
+
+    .btn-cyber-add {
+        background: rgba(2, 132, 199, 0.1);
+        border: 1px solid var(--neon-cyan-dark);
+        color: var(--neon-cyan-dark);
+        padding: 8px 16px;
+        font-family: 'Share Tech Mono', monospace;
+        font-weight: bold;
+        font-size: 0.85rem;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .btn-cyber-add:hover {
+        background: var(--neon-cyan-dark);
+        color: #ffffff;
+    }
+
+    .t-cyan {
+        color: var(--neon-cyan-dark);
+        font-weight: bold;
     }
 
     .mt-1 {
@@ -305,21 +419,93 @@ $id_tecnico_sesion = $_SESSION['id'] ?? '';
         margin-top: 1.5rem;
     }
 
+    /* MODAL NATIVO ESTÁNDAR */
+    .custom-cyber-modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(15, 23, 42, 0.6);
+        backdrop-filter: blur(4px);
+        z-index: 99999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .custom-cyber-modal-container {
+        background: #ffffff;
+        width: 100%;
+        max-width: 480px;
+        border-radius: 8px;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        border: 1px solid var(--border-cyber-subtle);
+        overflow: hidden;
+        animation: fadeInModal 0.2s ease-out;
+    }
+
+    @keyframes fadeInModal {
+        from {
+            opacity: 0;
+            transform: scale(0.95);
+        }
+
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    .cyber-modal-header {
+        border-bottom: 1px solid var(--border-cyber-subtle);
+        padding: 15px 20px;
+        background: #f8fafc;
+    }
+
+    .text-cyber-close {
+        color: var(--text-cyber-muted);
+        font-size: 1.5rem;
+        float: right;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        line-height: 1;
+    }
+
+    .text-cyber-close:hover {
+        color: var(--neon-red-dark);
+    }
+
+    .modal-body {
+        padding: 20px;
+    }
+
+    .cyber-modal-footer {
+        border-top: 1px solid var(--border-cyber-subtle);
+        padding: 12px 20px;
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        background: #f8fafc;
+    }
+
+    /* ETIQUETA IMPRESIÓN */
     .ticket-etiqueta {
-        background: #fff;
+        background: #f8fafc;
         padding: 15px;
-        border-radius: 4px;
+        border-radius: 6px;
         max-width: 220px;
-        margin: 15px auto;
-        color: #000;
-        border: 2px solid #ffca28;
+        margin: 10px auto;
+        color: #0f172a;
+        border: 2px solid var(--neon-cyan-dark);
     }
 
     .ticket-title {
         font-size: 1.1rem;
         margin: 0 0 8px 0;
         font-weight: bold;
-        color: #000;
+        color: #0f172a;
         letter-spacing: 1px;
     }
 
@@ -331,7 +517,7 @@ $id_tecnico_sesion = $_SESSION['id'] ?? '';
 
     .ticket-barcode {
         width: 180px;
-        height: 50px;
+        height: 45px;
         object-fit: contain;
     }
 </style>

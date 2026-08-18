@@ -15,23 +15,24 @@ if (session_status() === PHP_SESSION_NONE) {
       <span class="system-badge-live">LAB_CORE_v5.0</span>
     </div>
 
-    <div class="cyber-meta-nodes">
+    <div class="cyber-meta-nodes font-mono">
       <div class="meta-node">
         <span class="node-label">OPERADOR:</span>
         <span class="node-val text-neon-cyan">👤 Administrador</span>
       </div>
       <div class="meta-node">
         <span class="node-label">PERÍODO:</span>
-        <span class="node-val text-neon-purple">📅 Jun 2026</span>
+        <span class="node-val text-neon-purple">📅 Ago 2026</span>
       </div>
       <div class="meta-node system-status-pulse">
-        <span class="pulse-dot"></span> <span class="node-val">MODULO OPERATIVO</span>
+        <span class="pulse-dot"></span> <span class="node-val">MÓDULO OPERATIVO</span>
       </div>
     </div>
   </header>
 
   <section class="cyber-content">
 
+    <!-- FILA SUPERIOR: TARJETAS KPI DENSAS -->
     <div class="cyber-grid-super-dense">
 
       <div class="cyber-kpi-card glass-panel-neon border-neon-blue">
@@ -39,7 +40,7 @@ if (session_status() === PHP_SESSION_NONE) {
           <span class="kpi-tag-label">GLOBAL_RMA</span>
           <span class="trend-indicator neon-text-green">▲ 18%</span>
         </div>
-        <div class="kpi-main-data-compact">
+        <div class="kpi-main-data-compact font-mono">
           <h3 id="kpiTotal" class="neon-text-blue">247</h3>
           <p class="kpi-desc-title">Casos totales</p>
         </div>
@@ -48,9 +49,9 @@ if (session_status() === PHP_SESSION_NONE) {
       <div class="cyber-kpi-card glass-panel-neon border-neon-yellow">
         <div class="kpi-header-inline">
           <span class="kpi-tag-label">COLA_LAB</span>
-          <span class="status-pulse-yellow"></span>
+          <span class="pulse-dot-yellow"></span>
         </div>
-        <div class="kpi-main-data-compact">
+        <div class="kpi-main-data-compact font-mono">
           <h3 id="kpiPendiente" class="neon-text-yellow">34</h3>
           <p class="kpi-desc-title">En proceso</p>
         </div>
@@ -61,7 +62,7 @@ if (session_status() === PHP_SESSION_NONE) {
           <span class="kpi-tag-label">CALIDAD</span>
           <span class="trend-indicator neon-text-green">94% EFIC.</span>
         </div>
-        <div class="kpi-main-data-compact">
+        <div class="kpi-main-data-compact font-mono">
           <h3 id="kpiConcretado" class="neon-text-green">89</h3>
           <p class="kpi-desc-title">Resueltos mes</p>
         </div>
@@ -72,7 +73,7 @@ if (session_status() === PHP_SESSION_NONE) {
           <span class="kpi-tag-label">LATENCIA</span>
           <span class="trend-indicator neon-text-red">▼ 0.4d</span>
         </div>
-        <div class="kpi-main-data-compact">
+        <div class="kpi-main-data-compact font-mono">
           <h3 class="neon-text-purple">3.2</h3>
           <p class="kpi-desc-title">Días promedio</p>
         </div>
@@ -85,7 +86,7 @@ if (session_status() === PHP_SESSION_NONE) {
         </div>
         <div class="cyber-mini-donut-wrapper">
           <canvas id="chartSubtiposMini" style="max-height: 55px; max-width: 55px;"></canvas>
-          <div class="mini-donut-legend">
+          <div class="mini-donut-legend font-mono">
             <span>Gar: 41%</span>
             <span>Cond: 28%</span>
           </div>
@@ -104,56 +105,59 @@ if (session_status() === PHP_SESSION_NONE) {
 
     </div>
 
+    <!-- FILA CENTRAL: LISTAS DE FALLAS, ULTIMOS CASOS Y ALERTAS -->
     <div class="cyber-grid-three-columns mt-4">
 
+      <!-- PRODUCTOS CON MÁS FALLAS -->
       <div class="cyber-panel-card glass-panel-neon border-neon-blue">
         <div class="panel-cyber-header">
           <h4><span class="cyan-accent">//</span> PRODUCTOS CON MÁS FALLAS</h4>
         </div>
-        <div class="panel-cyber-body-list">
-          <div class="fault-item">
+        <div class="panel-cyber-body-list mt-3">
+          <div class="fault-item font-mono">
             <span class="fault-name">Laptop HP 15s</span>
             <div class="fault-bar-container">
               <div class="fault-bar fill-hp" style="width: 80%;"></div>
             </div>
-            <span class="fault-qty font-mono">28</span>
+            <span class="fault-qty">28</span>
           </div>
-          <div class="fault-item">
+          <div class="fault-item font-mono">
             <span class="fault-name">Monitor ViewSonic</span>
             <div class="fault-bar-container">
               <div class="fault-bar fill-viewsonic" style="width: 65%;"></div>
             </div>
-            <span class="fault-qty font-mono">22</span>
+            <span class="fault-qty">22</span>
           </div>
-          <div class="fault-item">
+          <div class="fault-item font-mono">
             <span class="fault-name">Laptop Lenovo V15</span>
             <div class="fault-bar-container">
               <div class="fault-bar fill-lenovo" style="width: 50%;"></div>
             </div>
-            <span class="fault-qty font-mono">18</span>
+            <span class="fault-qty">18</span>
           </div>
-          <div class="fault-item">
+          <div class="fault-item font-mono">
             <span class="fault-name">Teclado Logitech</span>
             <div class="fault-bar-container">
               <div class="fault-bar fill-logitech" style="width: 38%;"></div>
             </div>
-            <span class="fault-qty font-mono">13</span>
+            <span class="fault-qty">13</span>
           </div>
-          <div class="fault-item">
+          <div class="fault-item font-mono">
             <span class="fault-name">Mouse Genius</span>
             <div class="fault-bar-container">
               <div class="fault-bar fill-genius" style="width: 22%;"></div>
             </div>
-            <span class="fault-qty font-mono">8</span>
+            <span class="fault-qty">8</span>
           </div>
         </div>
       </div>
 
+      <!-- ÚLTIMOS INGRESADOS -->
       <div class="cyber-panel-card glass-panel-neon border-neon-purple">
         <div class="panel-cyber-header">
           <h4><span class="purple-accent">//</span> CASOS ACTIVOS — ÚLTIMOS INGRESADOS</h4>
         </div>
-        <div class="panel-cyber-body-table">
+        <div class="panel-cyber-body-table mt-3 font-mono">
           <table class="cyber-mini-table">
             <thead>
               <tr>
@@ -167,31 +171,31 @@ if (session_status() === PHP_SESSION_NONE) {
               <tr>
                 <td class="t-cyan font-mono">RMA-0247</td>
                 <td>M. García</td>
-                <td><span class="badge-status badge-repair">Reparación</span></td>
+                <td><span class="badge-status-cyber status-default">Reparación</span></td>
                 <td class="font-mono">2</td>
               </tr>
               <tr>
                 <td class="t-cyan font-mono">RMA-0246</td>
                 <td>J. Benítez</td>
-                <td><span class="badge-status badge-diag">Diagnóstico</span></td>
+                <td><span class="badge-status-cyber status-1">Diagnóstico</span></td>
                 <td class="font-mono">1</td>
               </tr>
               <tr>
                 <td class="t-cyan font-mono">RMA-0245</td>
                 <td>A. Rojas</td>
-                <td><span class="badge-status badge-ready">Listo</span></td>
+                <td><span class="badge-status-cyber status-ready">Listo</span></td>
                 <td class="font-mono">4</td>
               </tr>
               <tr>
                 <td class="t-cyan font-mono">RMA-0244</td>
                 <td>P. Núñez</td>
-                <td><span class="badge-status badge-external">Externo</span></td>
+                <td><span class="badge-status-cyber status-external">Externo</span></td>
                 <td class="font-mono">8</td>
               </tr>
               <tr>
                 <td class="t-cyan font-mono">RMA-0243</td>
                 <td>R. López</td>
-                <td><span class="badge-status badge-repair">Reparación</span></td>
+                <td><span class="badge-status-cyber status-default">Reparación</span></td>
                 <td class="font-mono">3</td>
               </tr>
             </tbody>
@@ -199,86 +203,90 @@ if (session_status() === PHP_SESSION_NONE) {
         </div>
       </div>
 
+      <!-- ALERTAS DEL SISTEMA -->
       <div class="cyber-panel-card glass-panel-neon border-neon-red">
         <div class="panel-cyber-header">
           <h4><span class="text-neon-red">//</span> ALERTAS DEL SISTEMA</h4>
         </div>
-        <div class="panel-cyber-body-alerts">
+        <div class="panel-cyber-body-alerts mt-3 font-mono">
           <div class="alert-node-item b-left-red">
             <span class="alert-bullet dot-red"></span>
-            <p>Stock crítico: <span class="text-white font-weight-bold">Pasta térmica Arctic</span> — 3 unidades</p>
+            <p>Stock crítico: <span class="text-dark-bold">Pasta térmica Arctic</span> — 3 unidades</p>
           </div>
           <div class="alert-node-item b-left-red">
             <span class="alert-bullet dot-red"></span>
-            <p>Stock crítico: <span class="text-white font-weight-bold">Cable HDMI 2m</span> — 2 unidades</p>
+            <p>Stock crítico: <span class="text-dark-bold">Cable HDMI 2m</span> — 2 unidades</p>
           </div>
           <div class="alert-node-item b-left-yellow">
             <span class="alert-bullet dot-yellow"></span>
-            <p><span class="t-cyan font-mono">RMA-0231</span> lleva <span class="text-neon-yellow font-weight-bold">12
-                días</span> sin respuesta del proveedor</p>
+            <p><span class="t-cyan">RMA-0231</span> lleva <span class="text-yellow font-weight-bold">12 días</span> sin
+              respuesta del proveedor</p>
           </div>
           <div class="alert-node-item b-left-yellow">
             <span class="alert-bullet dot-yellow"></span>
-            <p><span class="t-cyan font-mono">RMA-0238</span> lleva <span class="text-neon-yellow font-weight-bold">9
-                días</span> en reparación</p>
+            <p><span class="t-cyan">RMA-0238</span> lleva <span class="text-yellow font-weight-bold">9 días</span> en
+              reparación</p>
           </div>
           <div class="alert-node-item b-left-blue">
             <span class="alert-bullet dot-blue"></span>
-            <p>Tasa de garantía HP superó el <span class="text-neon-blue font-weight-bold">35%</span> este mes</p>
+            <p>Tasa de garantía HP superó el <span class="t-cyan font-weight-bold">35%</span> este mes</p>
           </div>
         </div>
       </div>
 
     </div>
 
-    <div class="row mt-4">
+    <!-- FILA INFERIOR: CONCILIACIÓN DE MARCAS Y ESTADÍSTICAS -->
+    <div class="cyber-grid-two-unequal mt-4">
 
-      <div class="col-lg-7 col-md-12 mb-4">
-        <div class="cyber-panel glass-panel-neon border-neon-cyan">
-          <div class="panel-cyber-header">
-            <h4><span class="cyan-accent">//</span> CONCILIACIÓN DE STOCK VS RMA — FALLAS POR MARCA</h4>
-          </div>
-          <div class="panel-cyber-body">
-            <canvas id="chartConciliacionMarcas" style="max-height: 200px; width: 100%;"></canvas>
-          </div>
+      <div class="cyber-panel-card glass-panel-neon border-neon-cyan">
+        <div class="panel-cyber-header">
+          <h4><span class="cyan-accent">//</span> CONCILIACIÓN DE STOCK VS RMA — FALLAS POR MARCA</h4>
+        </div>
+        <div class="panel-cyber-body mt-3">
+          <canvas id="chartConciliacionMarcas" style="max-height: 200px; width: 100%;"></canvas>
         </div>
       </div>
 
-      <div class="col-lg-5 col-md-12 mb-4">
-        <div class="cyber-panel glass-panel-neon border-neon-green">
-          <div class="panel-cyber-header">
-            <h4><span class="green-accent">//</span> ESTADÍSTICAS DE CONCILIACIÓN</h4>
+      <div class="cyber-panel-card glass-panel-neon border-neon-green">
+        <div class="panel-cyber-header">
+          <h4><span class="green-accent">//</span> ESTADÍSTICAS DE CONCILIACIÓN</h4>
+        </div>
+        <div class="panel-cyber-body-stats font-mono mt-3">
+          <div class="stat-row"><span>Total productos vendidos:</span><span class="text-dark-bold">1,284 uds.</span>
           </div>
-          <div class="panel-cyber-body-stats font-mono">
-            <div class="stat-row"><span>Total productos vendidos:</span><span class="text-white">1,284 uds.</span></div>
-            <div class="stat-row"><span>Retornaron por RMA:</span><span class="text-neon-red">247 (19.2%)</span></div>
-            <div class="stat-row"><span>Mayor tasa de retorno:</span><span class="neon-text-orange">ViewSonic
-                (14.6%)</span></div>
-            <div class="stat-row"><span>Menor tasa de retorno:</span><span class="neon-text-green">Logitech
-                (3.1%)</span></div>
-            <div class="stat-row"><span>Costo estimado garantías:</span><span class="neon-text-purple">₲
-                18,400,000</span></div>
-            <div class="stat-row border-0 mt-2"><span class="text-neon-cyan">Tiempo resolución óptimo:</span><span
-                class="badge-time">&lt; 3 días</span></div>
+          <div class="stat-row"><span>Retornaron por RMA:</span><span class="text-neon-red">247 (19.2%)</span></div>
+          <div class="stat-row"><span>Mayor tasa de retorno:</span><span class="text-yellow">ViewSonic (14.6%)</span>
+          </div>
+          <div class="stat-row"><span>Menor tasa de retorno:</span><span class="green-accent">Logitech (3.1%)</span>
+          </div>
+          <div class="stat-row"><span>Costo estimado garantías:</span><span class="purple-accent">₲ 18,400,000</span>
+          </div>
+          <div class="stat-row border-0 mt-2">
+            <span class="t-cyan">Tiempo resolución óptimo:</span>
+            <span class="system-badge-live"
+              style="color:var(--neon-green-dark); border-color:var(--neon-green-dark); background:rgba(21,128,61,0.08);">&lt;
+              3 días</span>
           </div>
         </div>
       </div>
 
     </div>
 
-    <div class="cyber-panel glass-panel-neon border-neon-blue mt-2">
-      <div class="panel-cyber-header">
-        <h4><span class="cyan-accent">//</span> AUDITORÍA EN VIVO: CONTROL DE MAQUINAS Y ACTIVOS EN TALLER</h4>
+    <!-- TERMINAL DE AUDITORÍA EN VIVO -->
+    <div class="cyber-panel-card glass-panel-neon border-neon-blue mt-4">
+      <div class="panel-cyber-header flex-header-toolbar">
+        <h4><span class="cyan-accent">//</span> AUDITORÍA EN VIVO: CONTROL DE MÁQUINAS Y ACTIVOS EN TALLER</h4>
         <span class="terminal-blink-text">● MONITOR ACTIVO</span>
       </div>
-      <div class="terminal-console-box">
-        <div class="term-line"><span class="t-cyan">[13:54]</span> <span class="t-green">INGRESO:</span> Laptop ASUS ROG
-          (N/S: GR5921) | <span class="t-purple">Cliente:</span> Carlos Gómez | <span class="t-yellow">Asignado
-            a:</span> Tec. Marcos Silva</div>
-        <div class="term-line"><span class="t-cyan">[13:55]</span> <span class="t-purple">ESTADO:</span> PC Escritorio
-          Gamer -> <span class="t-green">Reparado (Cambio de Fuente EVGA 600W)</span> | <span
-            class="t-yellow">Técnico:</span> Alejandro R.</div>
-        <div class="term-line"><span class="t-cyan">[13:56]</span> <span class="t-red">ALERTA:</span> Intel Core
+      <div class="terminal-console-box mt-3 font-mono">
+        <div class="term-line"><span class="t-cyan">[13:54]</span> <span class="green-accent">INGRESO:</span> Laptop
+          ASUS ROG (N/S: GR5921) | <span class="purple-accent">Cliente:</span> Carlos Gómez | <span
+            class="text-yellow">Asignado a:</span> Tec. Marcos Silva</div>
+        <div class="term-line"><span class="t-cyan">[13:55]</span> <span class="purple-accent">ESTADO:</span> PC
+          Escritorio Gamer -> <span class="green-accent">Reparado (Cambio de Fuente EVGA 600W)</span> | <span
+            class="text-yellow">Técnico:</span> Alejandro R.</div>
+        <div class="term-line"><span class="t-cyan">[13:56]</span> <span class="text-neon-red">ALERTA:</span> Intel Core
           i7-14700K solicitado para reemplazo físico sin stock en depósito central.</div>
         <div class="term-line blink-line"><span class="t-cyan">[>&nbsp;]</span> Escaneando nuevas bahías de trabajo de
           hardware... Esperando token de validación...</div>
@@ -294,91 +302,113 @@ if (session_status() === PHP_SESSION_NONE) {
   @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@500;600;700&display=swap');
 
   :root {
-    --cyber-bg: #060913;
-    --glass-bg: rgba(10, 16, 32, 0.6);
-    --glass-border: rgba(255, 255, 255, 0.04);
-    --neon-blue: #00f2ff;
-    --neon-yellow: #ffca28;
-    --neon-green: #00ff66;
-    --neon-purple: #9d4edd;
-    --neon-cyan: #00b4d8;
-    --neon-red: #ff3333;
-    --neon-orange: #ff7b00;
-    --neon-pink: #ff007f;
+    --bg-cyber-light: #f0f4f8;
+    --card-cyber-light: #ffffff;
+    --border-cyber-subtle: #cbd5e1;
+    --text-cyber-dark: #0f172a;
+    --text-cyber-muted: #475569;
+
+    --neon-cyan-dark: #0284c7;
+    --neon-cyan-glow: #00b4d8;
+    --neon-green-dark: #15803d;
+    --neon-red-dark: #dc2626;
+    --neon-purple-dark: #7e22ce;
+    --neon-yellow-dark: #d97706;
+    --neon-pink-dark: #be185d;
   }
 
   .dashboard-cyber-wrapper {
-    background-color: var(--cyber-bg);
+    background-color: var(--bg-cyber-light);
+    background-image:
+      radial-gradient(circle at 50% 10%, rgba(2, 132, 199, 0.05) 0%, transparent 60%),
+      linear-gradient(rgba(203, 213, 225, 0.2) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(203, 213, 225, 0.2) 1px, transparent 1px);
+    background-size: 100% 100%, 20px 20px, 20px 20px;
     min-height: 100vh;
-    padding-bottom: 30px;
-    color: #e2e8f0;
+    padding: 20px;
+    color: var(--text-cyber-dark);
     font-family: 'Rajdhani', sans-serif;
   }
 
-  /* BARRA DE NAVEGACIÓN SUPERIOR */
   .cyber-header {
-    background-color: rgba(6, 11, 25, 0.9);
-    border-bottom: 2px solid #101c38;
-    padding: 12px 25px;
+    background-color: #ffffff;
+    border-bottom: 2px solid var(--neon-cyan-dark);
+    padding: 15px 25px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    border-radius: 6px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+    flex-wrap: wrap;
+    gap: 15px;
   }
 
   .header-brand-glitch {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
   }
 
   .header-brand-glitch h2 {
-    font-size: 1.25rem;
+    font-size: 1.2rem;
     font-weight: 700;
-    color: #fff;
+    color: var(--text-cyber-dark);
     margin: 0;
+    letter-spacing: 0.5px;
   }
 
   .system-badge-live {
     font-family: 'Share Tech Mono', monospace;
     font-size: 0.65rem;
-    border: 1px solid var(--neon-blue);
-    color: var(--neon-blue);
-    padding: 1px 6px;
+    border: 1px solid var(--neon-cyan-dark);
+    color: var(--neon-cyan-dark);
+    background: rgba(2, 132, 199, 0.08);
+    padding: 2px 8px;
     border-radius: 4px;
+    font-weight: bold;
   }
 
   .cyber-meta-nodes {
     display: flex;
     gap: 20px;
-    font-family: 'Share Tech Mono', monospace;
     font-size: 0.8rem;
+    flex-wrap: wrap;
   }
 
   .node-label {
-    color: #506690;
+    color: var(--text-cyber-muted);
+    font-weight: bold;
   }
 
   .system-status-pulse {
-    color: var(--neon-green) !important;
+    color: var(--neon-green-dark) !important;
     display: flex;
     align-items: center;
     gap: 6px;
+    font-weight: bold;
   }
 
   .pulse-dot {
-    width: 7px;
-    height: 7px;
-    background-color: var(--neon-green);
+    width: 8px;
+    height: 8px;
+    background-color: var(--neon-green-dark);
     border-radius: 50%;
-    box-shadow: 0 0 8px var(--neon-green);
     animation: blink-animation 1s infinite;
   }
 
-  /* COMPACT GRID CONFIGURATION - LADO A LADO SIN REVENTAR EN VERTICAL */
+  .pulse-dot-yellow {
+    width: 8px;
+    height: 8px;
+    background-color: var(--neon-yellow-dark);
+    border-radius: 50%;
+    animation: blink-animation 1s infinite;
+  }
+
+  /* GRIDS DEL DASHBOARD */
   .cyber-grid-super-dense {
     display: grid;
     grid-template-columns: repeat(6, 1fr);
-    gap: 12px;
+    gap: 15px;
     width: 100%;
     margin-top: 20px;
   }
@@ -386,7 +416,14 @@ if (session_status() === PHP_SESSION_NONE) {
   .cyber-grid-three-columns {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
+    gap: 20px;
+    width: 100%;
+  }
+
+  .cyber-grid-two-unequal {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 20px;
     width: 100%;
   }
 
@@ -398,6 +435,10 @@ if (session_status() === PHP_SESSION_NONE) {
     .cyber-grid-three-columns {
       grid-template-columns: 1fr;
     }
+
+    .cyber-grid-two-unequal {
+      grid-template-columns: 1fr;
+    }
   }
 
   @media(max-width: 600px) {
@@ -406,53 +447,54 @@ if (session_status() === PHP_SESSION_NONE) {
     }
   }
 
-  /* ESTILOS DE MÓDULOS INDIVIDUALES CARDS */
+  /* TARJETAS Y PANELES */
+  .cyber-panel-card {
+    background: var(--card-cyber-light);
+    border: 1px solid var(--border-cyber-subtle);
+    border-radius: 8px;
+    padding: 18px;
+    box-shadow: 0 10px 25px rgba(15, 23, 42, 0.04);
+  }
+
   .cyber-kpi-card {
     position: relative;
     border-radius: 8px;
-    padding: 12px;
+    padding: 14px;
     min-height: 100px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-  }
-
-  .glass-panel-neon {
-    background: var(--glass-bg);
-    border: 1px solid var(--glass-border);
-    backdrop-filter: blur(10px);
+    background: var(--card-cyber-light);
+    border: 1px solid var(--border-cyber-subtle);
+    box-shadow: 0 4px 15px rgba(15, 23, 42, 0.03);
   }
 
   .border-neon-blue {
-    border-left: 3px solid var(--neon-blue);
+    border-left: 4px solid var(--neon-cyan-dark);
   }
 
   .border-neon-yellow {
-    border-left: 3px solid var(--neon-yellow);
+    border-left: 4px solid var(--neon-yellow-dark);
   }
 
   .border-neon-green {
-    border-left: 3px solid var(--neon-green);
+    border-left: 4px solid var(--neon-green-dark);
   }
 
   .border-neon-purple {
-    border-left: 3px solid var(--neon-purple);
+    border-left: 4px solid var(--neon-purple-dark);
   }
 
   .border-neon-cyan {
-    border-left: 3px solid var(--neon-cyan);
+    border-left: 4px solid var(--neon-cyan-glow);
   }
 
   .border-neon-red {
-    border-left: 3px solid var(--neon-red);
+    border-left: 4px solid var(--neon-red-dark);
   }
 
   .border-neon-pink {
-    border-left: 3px solid var(--neon-pink);
-  }
-
-  .border-neon-orange {
-    border-left: 3px solid var(--neon-orange);
+    border-left: 4px solid var(--neon-pink-dark);
   }
 
   .kpi-header-inline {
@@ -460,26 +502,25 @@ if (session_status() === PHP_SESSION_NONE) {
     justify-content: space-between;
     align-items: center;
     font-family: 'Share Tech Mono', monospace;
-    font-size: 0.65rem;
-    color: #617594;
+    font-size: 0.7rem;
+    color: var(--text-cyber-muted);
   }
 
   .kpi-main-data-compact h3 {
-    font-size: 2rem;
+    font-size: 1.8rem;
     font-weight: 700;
-    margin: 0;
+    margin: 4px 0 0 0;
     line-height: 1;
   }
 
   .kpi-desc-title {
-    font-size: 0.85rem;
-    color: #a2b4cd;
-    margin: 2px 0 0 0;
-    font-weight: 600;
+    font-size: 0.75rem;
+    color: var(--text-cyber-muted);
+    margin: 4px 0 0 0;
+    font-weight: bold;
     text-transform: uppercase;
   }
 
-  /* CONFIGURACIÓN INTERNA DE TARJETAS MINI MIX */
   .cyber-mini-donut-wrapper,
   .cyber-mini-radar-wrapper {
     display: flex;
@@ -489,35 +530,25 @@ if (session_status() === PHP_SESSION_NONE) {
   }
 
   .mini-donut-legend {
-    font-size: 0.68rem;
-    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.7rem;
     display: flex;
     flex-direction: column;
-    color: #7388a9;
+    color: var(--text-cyber-muted);
   }
 
-  /* PRODUCTOS CON MÁS FALLAS ESTILOS */
-  .cyber-panel-card {
-    border-radius: 10px;
-    padding: 15px;
-    min-height: 240px;
+  .flex-header-toolbar {
     display: flex;
-    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
   }
 
-  .panel-cyber-header h4 {
-    font-size: 0.95rem;
-    font-weight: 700;
-    margin: 0;
-    color: #fff;
-    letter-spacing: 0.5px;
-  }
-
+  /* LISTA DE FALLAS */
   .panel-cyber-body-list {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    margin-top: 12px;
+    gap: 12px;
   }
 
   .fault-item {
@@ -525,66 +556,62 @@ if (session_status() === PHP_SESSION_NONE) {
     align-items: center;
     justify-content: space-between;
     gap: 10px;
-    font-size: 0.88rem;
+    font-size: 0.85rem;
   }
 
   .fault-name {
-    width: 110px;
-    color: #cbd5e1;
+    width: 120px;
+    color: var(--text-cyber-dark);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    font-weight: bold;
   }
 
   .fault-bar-container {
     flex: 1;
-    height: 6px;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 3px;
+    height: 8px;
+    background: #f1f5f9;
+    border-radius: 4px;
     overflow: hidden;
+    border: 1px solid var(--border-cyber-subtle);
   }
 
   .fault-bar {
     height: 100%;
-    border-radius: 3px;
+    border-radius: 4px;
   }
 
   .fill-hp {
-    background-color: #1d68c5;
-    box-shadow: 0 0 6px #1d68c5;
+    background-color: var(--neon-cyan-dark);
   }
 
   .fill-viewsonic {
-    background-color: #248a48;
-    box-shadow: 0 0 6px #248a48;
+    background-color: var(--neon-green-dark);
   }
 
   .fill-lenovo {
-    background-color: #9d4edd;
-    box-shadow: 0 0 6px #9d4edd;
+    background-color: var(--neon-purple-dark);
   }
 
-  .fill-logitech) {
-    background-color: #ff7b00;
-    box-shadow: 0 0 6px #ff7b00;
+  .fill-logitech {
+    background-color: var(--neon-yellow-dark);
   }
 
   .fill-genius {
-    background-color: #ffca28;
-    box-shadow: 0 0 6px #ffca28;
+    background-color: var(--neon-pink-dark);
   }
 
   .fault-qty {
     font-size: 0.85rem;
-    font-weight: 700;
-    color: #fff;
-    width: 15px;
+    font-weight: bold;
+    color: var(--text-cyber-dark);
+    width: 20px;
     text-align: right;
   }
 
-  /* TABLAS COMPACTAS DE ÚLTIMOS INGRESADOS */
+  /* TABLAS DE CASOS ACTIVOS */
   .panel-cyber-body-table {
-    margin-top: 8px;
     overflow-x: auto;
   }
 
@@ -592,73 +619,76 @@ if (session_status() === PHP_SESSION_NONE) {
     width: 100%;
     border-collapse: collapse;
     font-size: 0.85rem;
-    text-align: left;
   }
 
   .cyber-mini-table th {
     font-family: 'Share Tech Mono', monospace;
     font-size: 0.72rem;
-    color: #516995;
-    padding: 6px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    color: var(--text-cyber-muted);
+    padding: 8px 6px;
+    border-bottom: 2px solid var(--border-cyber-subtle);
     text-transform: uppercase;
+    text-align: center;
+    background: #f8fafc;
   }
 
   .cyber-mini-table td {
-    padding: 7px 6px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.02);
-    color: #cbd5e1;
+    padding: 8px 6px;
+    border-bottom: 1px solid #f1f5f9;
+    color: var(--text-cyber-dark);
+    text-align: center;
   }
 
-  .badge-status {
+  .badge-status-cyber {
+    font-size: 0.72rem;
+    font-weight: bold;
     padding: 2px 8px;
     border-radius: 4px;
-    font-size: 0.72rem;
-    font-weight: 600;
     display: inline-block;
+    border: 1px solid;
   }
 
-  .badge-repair {
-    background: rgba(255, 202, 40, 0.1);
-    color: var(--neon-yellow);
-    border: 1px solid rgba(255, 202, 40, 0.2);
+  .status-1 {
+    background: rgba(2, 132, 199, 0.08);
+    color: var(--neon-cyan-dark);
+    border-color: rgba(2, 132, 199, 0.3);
   }
 
-  .badge-diag {
-    background: rgba(0, 242, 255, 0.1);
-    color: var(--neon-blue);
-    border: 1px solid rgba(0, 242, 255, 0.2);
+  .status-default {
+    background: rgba(217, 119, 6, 0.08);
+    color: var(--neon-yellow-dark);
+    border-color: rgba(217, 119, 6, 0.3);
   }
 
-  .badge-ready {
-    background: rgba(0, 255, 102, 0.1);
-    color: var(--neon-green);
-    border: 1px solid rgba(0, 255, 102, 0.2);
+  .status-ready {
+    background: rgba(21, 128, 61, 0.08);
+    color: var(--neon-green-dark);
+    border-color: rgba(21, 128, 61, 0.3);
   }
 
-  .badge-external {
-    background: rgba(255, 51, 51, 0.1);
-    color: var(--neon-red);
-    border: 1px solid rgba(255, 51, 51, 0.2);
+  .status-external {
+    background: rgba(220, 38, 38, 0.08);
+    color: var(--neon-red-dark);
+    border-color: rgba(220, 38, 38, 0.3);
   }
 
-  /* COMPONENTE DE ALERTAS CRÍTICAS DEL TALLER */
+  /* ALERTAS DEL SISTEMA */
   .panel-cyber-body-alerts {
     display: flex;
     flex-direction: column;
     gap: 8px;
-    margin-top: 12px;
   }
 
   .alert-node-item {
     display: flex;
     align-items: flex-start;
-    gap: 8px;
-    background: rgba(255, 255, 255, 0.01);
-    padding: 6px 10px;
+    gap: 10px;
+    background: #f8fafc;
+    padding: 8px 12px;
     border-radius: 4px;
     font-size: 0.82rem;
-    color: #a2b3cd;
+    color: var(--text-cyber-dark);
+    border: 1px solid var(--border-cyber-subtle);
   }
 
   .alert-node-item p {
@@ -667,138 +697,121 @@ if (session_status() === PHP_SESSION_NONE) {
   }
 
   .alert-bullet {
-    width: 6px;
-    height: 6px;
+    width: 8px;
+    height: 8px;
     border-radius: 50%;
-    margin-top: 5px;
+    margin-top: 4px;
     flex-shrink: 0;
   }
 
   .dot-red {
-    background-color: var(--neon-red);
-    box-shadow: 0 0 6px var(--neon-red);
+    background-color: var(--neon-red-dark);
   }
 
   .dot-yellow {
-    background-color: var(--neon-yellow);
-    box-shadow: 0 0 6px var(--neon-yellow);
+    background-color: var(--neon-yellow-dark);
   }
 
   .dot-blue {
-    background-color: var(--neon-blue);
-    box-shadow: 0 0 6px var(--neon-blue);
+    background-color: var(--neon-cyan-dark);
   }
 
   .b-left-red {
-    border-left: 2px solid rgba(255, 51, 51, 0.3);
+    border-left: 3px solid var(--neon-red-dark);
   }
 
   .b-left-yellow {
-    border-left: 2px solid rgba(255, 202, 40, 0.3);
+    border-left: 3px solid var(--neon-yellow-dark);
   }
 
   .b-left-blue {
-    border-left: 2px solid rgba(0, 242, 255, 0.3);
+    border-left: 3px solid var(--neon-cyan-dark);
   }
 
-  /* MÓDULO PANEL INFERIOR Y ESTADÍSTICAS */
-  .cyber-panel {
-    border-radius: 10px;
-    padding: 18px;
-    min-height: 240px;
-  }
-
+  /* ESTADÍSTICAS */
   .panel-cyber-body-stats {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    margin-top: 12px;
-    font-size: 0.9rem;
-    color: #a4b3cd;
+    font-size: 0.88rem;
   }
 
   .stat-row {
     display: flex;
     justify-content: space-between;
     padding-bottom: 8px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    border-bottom: 1px solid #f1f5f9;
+    color: var(--text-cyber-muted);
   }
 
-  .badge-time {
-    background: rgba(0, 255, 102, 0.1);
-    color: var(--neon-green);
-    padding: 1px 8px;
-    border-radius: 4px;
-    border: 1px solid rgba(0, 255, 102, 0.2);
-  }
-
-  /* CONSOLA TERMINAL LOGS GENERAL */
+  /* TERMINAL CONSOLA */
   .terminal-console-box {
-    background-color: rgba(3, 5, 12, 0.85);
-    border: 1px solid rgba(0, 242, 255, 0.08);
+    background-color: #0f172a;
+    border: 1px solid var(--border-cyber-subtle);
     border-radius: 6px;
-    padding: 12px;
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 0.8rem;
+    padding: 14px;
+    font-size: 0.82rem;
     min-height: 100px;
-    line-height: 1.5;
+    line-height: 1.6;
+    color: #e2e8f0;
   }
 
   .term-line {
-    margin-bottom: 3px;
-    color: #94a3b8;
+    margin-bottom: 4px;
   }
 
-  /* ATRIBUTOS TEXTOS GLOW */
-  .neon-text-blue {
-    color: var(--neon-blue);
-    text-shadow: 0 0 8px rgba(0, 242, 255, 0.25);
-  }
-
-  .neon-text-yellow {
-    color: var(--neon-yellow);
-    text-shadow: 0 0 8px rgba(255, 202, 40, 0.25);
-  }
-
-  .neon-text-green {
-    color: var(--neon-green);
-    text-shadow: 0 0 8px rgba(0, 255, 102, 0.25);
-  }
-
-  .neon-text-purple {
-    color: var(--neon-purple);
-    text-shadow: 0 0 8px rgba(157, 78, 221, 0.25);
-  }
-
+  /* ATRIBUTOS Y COLORES NEÓN */
+  .cyan-accent,
+  .t-cyan,
+  .neon-text-blue,
   .neon-text-cyan {
-    color: var(--neon-cyan);
+    color: var(--neon-cyan-dark);
+    font-weight: bold;
+  }
+
+  .purple-accent,
+  .neon-text-purple {
+    color: var(--neon-purple-dark);
+    font-weight: bold;
+  }
+
+  .green-accent,
+  .neon-text-green {
+    color: var(--neon-green-dark);
+    font-weight: bold;
+  }
+
+  .text-yellow,
+  .neon-text-yellow,
+  .neon-text-orange {
+    color: var(--neon-yellow-dark);
+    font-weight: bold;
   }
 
   .text-neon-red {
-    color: var(--neon-red);
-    text-shadow: 0 0 8px rgba(255, 51, 51, 0.25);
-  }
-
-  .neon-text-orange {
-    color: var(--neon-orange);
+    color: var(--neon-red-dark);
+    font-weight: bold;
   }
 
   .neon-text-pink {
-    color: var(--neon-pink);
+    color: var(--neon-pink-dark);
+    font-weight: bold;
+  }
+
+  .text-dark-bold {
+    color: var(--text-cyber-dark);
+    font-weight: bold;
   }
 
   .font-mono {
     font-family: 'Share Tech Mono', monospace;
   }
 
-  .font-weight-bold {
-    font-weight: 600;
-  }
-
   .terminal-blink-text {
     font-family: 'Share Tech Mono', monospace;
     font-size: 0.72rem;
-    color: var(--neon-red);
+    color: var(--neon-green-dark);
+    font-weight: bold;
     animation: blink-animation 1s infinite;
   }
 
@@ -811,81 +824,101 @@ if (session_status() === PHP_SESSION_NONE) {
       opacity: 0.3;
     }
   }
+
+  .mt-2 {
+    margin-top: 0.5rem;
+  }
+
+  .mt-3 {
+    margin-top: 1rem;
+  }
+
+  .mt-4 {
+    margin-top: 1.5rem;
+  }
 </style>
 
 <script>
   document.addEventListener("DOMContentLoaded", function () {
-    Chart.defaults.color = '#516995';
+    Chart.defaults.color = '#475569';
     Chart.defaults.font.family = "'Share Tech Mono', monospace";
 
     // 1. MINI DONUT EN KPI CARD (Segmentación Cobertura)
-    new Chart(document.getElementById('chartSubtiposMini').getContext('2d'), {
-      type: 'doughnut',
-      data: {
-        datasets: [{
-          data: [41, 28, 19, 12],
-          backgroundColor: ['#1d68c5', '#b27d2b', '#248a48', '#c53939'],
-          borderWidth: 0
-        }]
-      },
-      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, cutout: '72%' }
-    });
+    const ctxSubtipos = document.getElementById('chartSubtiposMini');
+    if (ctxSubtipos) {
+      new Chart(ctxSubtipos.getContext('2d'), {
+        type: 'doughnut',
+        data: {
+          datasets: [{
+            data: [41, 28, 19, 12],
+            backgroundColor: ['#0284c7', '#d97706', '#15803d', '#dc2626'],
+            borderWidth: 0
+          }]
+        },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, cutout: '72%' }
+      });
+    }
 
     // 2. MINI RADAR EN KPI CARD (Rendimiento Laboratorio)
-    new Chart(document.getElementById('chartRadarMini').getContext('2d'), {
-      type: 'radar',
-      data: {
-        labels: ['', '', '', '', ''],
-        datasets: [{
-          data: [88, 91, 95, 74, 82],
-          borderColor: '#00ff66',
-          backgroundColor: 'rgba(0, 255, 102, 0.1)',
-          borderWidth: 1,
-          pointRadius: 0
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: { legend: { display: false } },
-        scales: { r: { grid: { color: 'rgba(255,255,255,0.05)' }, angleLines: { display: false }, ticks: { display: false } } }
-      }
-    });
+    const ctxRadar = document.getElementById('chartRadarMini');
+    if (ctxRadar) {
+      new Chart(ctxRadar.getContext('2d'), {
+        type: 'radar',
+        data: {
+          labels: ['', '', '', '', ''],
+          datasets: [{
+            data: [88, 91, 95, 74, 82],
+            borderColor: '#15803d',
+            backgroundColor: 'rgba(21, 128, 61, 0.1)',
+            borderWidth: 1.5,
+            pointRadius: 0
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: { r: { grid: { color: 'rgba(15, 23, 42, 0.1)' }, angleLines: { display: false }, ticks: { display: false } } }
+        }
+      });
+    }
 
     // 3. GRÁFICO DE CONCILIACIÓN DE STOCK VS RMA - FALLAS POR MARCA
-    const ctxConciliacion = document.getElementById('chartConciliacionMarcas').getContext('2d');
-    new Chart(ctxConciliacion, {
-      type: 'bar',
-      data: {
-        labels: ['HP', 'ViewSonic', 'Lenovo', 'Logitech', 'Genius'],
-        datasets: [
-          {
-            label: 'Unidades Vendidas',
-            data: [450, 280, 320, 150, 84],
-            backgroundColor: 'rgba(0, 242, 255, 0.15)',
-            borderColor: '#00b4d8',
-            borderWidth: 1,
-            barThickness: 16
-          },
-          {
-            label: 'Retornos RMA',
-            data: [28, 22, 18, 13, 8],
-            backgroundColor: '#ff3333',
-            borderRadius: 3,
-            barThickness: 16
+    const ctxConciliacion = document.getElementById('chartConciliacionMarcas');
+    if (ctxConciliacion) {
+      new Chart(ctxConciliacion.getContext('2d'), {
+        type: 'bar',
+        data: {
+          labels: ['HP', 'ViewSonic', 'Lenovo', 'Logitech', 'Genius'],
+          datasets: [
+            {
+              label: 'Unidades Vendidas',
+              data: [450, 280, 320, 150, 84],
+              backgroundColor: 'rgba(2, 132, 199, 0.2)',
+              borderColor: '#0284c7',
+              borderWidth: 1,
+              barThickness: 16
+            },
+            {
+              label: 'Retornos RMA',
+              data: [28, 22, 18, 13, 8],
+              backgroundColor: '#dc2626',
+              borderRadius: 3,
+              barThickness: 16
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { labels: { color: '#475569', font: { size: 10 } } } },
+          scales: {
+            y: { grid: { color: '#cbd5e1' }, ticks: { font: { size: 10 } } },
+            x: { grid: { display: false }, ticks: { font: { size: 10 } } }
           }
-        ]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: { legend: { labels: { color: '#a2b4cd', font: { size: 10 } } } },
-        scales: {
-          y: { grid: { color: 'rgba(255, 255, 255, 0.03)' }, ticks: { font: { size: 10 } } },
-          x: { grid: { display: false }, ticks: { font: { size: 10 } } }
         }
-      }
-    });
+      });
+    }
   });
 </script>
 

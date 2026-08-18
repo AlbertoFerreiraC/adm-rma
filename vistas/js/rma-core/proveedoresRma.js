@@ -1,43 +1,86 @@
 (function () {
-    console.log("⚡ [RMA_CORE] Consola Logística Externa Inicializada...");
+    console.log("⚡ [RMA_CORE] Consola Logística Externa (Modo Modal Nativo) Inicializada...");
 
     const API_URL = "../api-rma/rma-core/casos/proveedoresRma.php";
+
     const form = document.getElementById("formFlujoExterno");
     const tbody = document.getElementById("tbodyLogistica");
     const buscador = document.getElementById("buscadorLogistica");
     const filtroAlcance = document.getElementById("filtroLogisticaAlcance");
     const inputFecha = document.getElementById("logFechaEnvio");
 
+    // Elementos del Modal Nativo
+    const modalOverlay = document.getElementById("modalLogisticaOverlay");
+    const btnCerrarModalX = document.getElementById("btnCerrarModalX");
+    const btnCancelarModal = document.getElementById("btnCancelarModal");
+    const lblTituloModal = document.getElementById("lblTituloModal");
+
+    // ==========================================
+    // 🔓 APERTURA / CIERRE DE MODAL NATIVO
+    // ==========================================
+    function abrirModal() {
+        if (modalOverlay) {
+            modalOverlay.style.display = "flex";
+        }
+    }
+
+    function cerrarModal() {
+        if (modalOverlay) {
+            modalOverlay.style.display = "none";
+        }
+        resetFormModal();
+    }
+
+    if (btnCerrarModalX) btnCerrarModalX.addEventListener("click", cerrarModal);
+    if (btnCancelarModal) btnCancelarModal.addEventListener("click", cerrarModal);
+
+    function resetFormModal() {
+        if (form) form.reset();
+        const idCasoInput = document.getElementById("logIdCaso");
+        if (idCasoInput) idCasoInput.value = "";
+
+        if (inputFecha) {
+            inputFecha.value = new Date().toISOString().split('T')[0];
+        }
+    }
+
     if (inputFecha) {
         inputFecha.value = new Date().toISOString().split('T')[0];
     }
 
+    // ==========================================
+    // 🚀 INICIALIZACIÓN
+    // ==========================================
     async function inicializarModuloLogistica() {
         try {
             const resProv = await fetch(`${API_URL}?action=aux_proveedores`);
             const dataProv = await resProv.json();
             if (dataProv.status === "success") {
                 const selectP = document.getElementById("selectProveedorLog");
-                selectP.innerHTML = '<option value="">[SELECCIONE SERVICE AUTORIZADO]</option>';
-                dataProv.proveedores.forEach(p => {
-                    const opt = document.createElement("option");
-                    opt.value = p.id;
-                    opt.textContent = `// SERVICE: ${p.nombre.toUpperCase()} (CON: ${p.contacto})`;
-                    selectP.appendChild(opt);
-                });
+                if (selectP) {
+                    selectP.innerHTML = '<option value="">[SELECCIONE SERVICE AUTORIZADO]</option>';
+                    dataProv.proveedores.forEach(p => {
+                        const opt = document.createElement("option");
+                        opt.value = p.id;
+                        opt.textContent = `// SERVICE: ${p.nombre.toUpperCase()} (CON: ${p.contacto || 'N/A'})`;
+                        selectP.appendChild(opt);
+                    });
+                }
             }
 
             const resEst = await fetch(`${API_URL}?action=aux_estados`);
             const dataEst = await resEst.json();
             if (dataEst.status === "success") {
                 const selectE = document.getElementById("selectEstadoLog");
-                selectE.innerHTML = '<option value="">[SELECCIONE TRANSICIÓN DE ESTADO]</option>';
-                dataEst.estados.forEach(e => {
-                    const opt = document.createElement("option");
-                    opt.value = e.id;
-                    opt.textContent = `// TRANSLATION: ${e.nombre.toUpperCase()}`;
-                    selectE.appendChild(opt);
-                });
+                if (selectE) {
+                    selectE.innerHTML = '<option value="">[SELECCIONE TRANSICIÓN DE ESTADO]</option>';
+                    dataEst.estados.forEach(e => {
+                        const opt = document.createElement("option");
+                        opt.value = e.id;
+                        opt.textContent = `// TRANSLATION: ${e.nombre.toUpperCase()}`;
+                        selectE.appendChild(opt);
+                    });
+                }
             }
 
             await listarMatrizLogistica();
@@ -47,7 +90,12 @@
         }
     }
 
+    // ==========================================
+    // 📡 LISTAR MATRIZ LOGÍSTICA
+    // ==========================================
     async function listarMatrizLogistica() {
+        if (!tbody) return;
+
         try {
             const buscar = buscador ? buscador.value.trim() : "";
             const alcance = filtroAlcance ? filtroAlcance.value : "todos";
@@ -57,54 +105,92 @@
 
             if (data.status === "success") {
                 tbody.innerHTML = "";
-                document.getElementById("contadorLogistica").textContent = `TOTAL: ${data.casos.length}`;
+                const contador = document.getElementById("contadorLogistica");
+                if (contador) contador.textContent = `TOTAL: ${data.casos.length}`;
 
-                if (data.casos.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#506690;">[NO_LOGISTIC_NODES_FOUND]</td></tr>`;
+                if (!data.casos || data.casos.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="6" class="text-center font-mono">[NO_LOGISTIC_NODES_FOUND]</td></tr>`;
                     return;
                 }
 
                 data.casos.forEach(c => {
                     const tr = document.createElement("tr");
-                    const serviceAsignado = c.proveedor_nombre ? c.proveedor_nombre.toUpperCase() : '<span style="color:#506690;">[INTERNO / SIN ASIGNAR]</span>';
+
+                    const numeroCaso = c.numero_caso || 'N/A';
+                    const equipo = c.equipo ? c.equipo.toUpperCase() : 'DISPOSITIVO';
+                    const marca = c.marca ? c.marca.toUpperCase() : 'S/M';
+                    const numeroSerie = c.numero_serie ? c.numero_serie.toUpperCase() : 'S/N';
+                    const serviceAsignado = c.proveedor_nombre
+                        ? c.proveedor_nombre.toUpperCase()
+                        : '<span style="color:#64748b;">[INTERNO / SIN ASIGNAR]</span>';
+                    const estadoNombre = c.estado_nombre ? c.estado_nombre.toUpperCase() : 'EN TALLER';
+
+                    const badgeStyle = c.id_estado_actual == 3
+                        ? "color:#d97706; border-color:#d97706; background:rgba(217,119,6,0.08);"
+                        : "color:#0284c7; border-color:#0284c7; background:rgba(2,132,199,0.08);";
 
                     tr.innerHTML = `
-                        <td class="text-neon-cyan" style="font-weight:bold;">${c.numero_caso}</td>
-                        <td style="text-transform:uppercase;">${c.equipo} <span style="color:#506690;">${c.marca}</span><br><small style="color:#ffca28;">S/N: ${c.numero_serie}</small></td>
-                        <td>${serviceAsignado}</td>
-                        <td style="text-align:center;"><button class="btn-cyber-action btn-select-node" data-id="${c.id}">[OPEN_DESPATCH]</button></td>
+                        <td class="t-cyan font-mono">${numeroCaso}</td>
+                        <td class="font-mono">${equipo} <span style="color:#64748b;">(${marca})</span></td>
+                        <td class="font-mono">${numeroSerie}</td>
+                        <td class="font-mono">${serviceAsignado}</td>
+                        <td><span class="system-badge-live" style="${badgeStyle}">${estadoNombre}</span></td>
+                        <td>
+                            <button type="button" class="btn-terminal-edit btn-select-node" data-id="${c.id}" title="Despacho Logístico">
+                                <i class="fa fa-truck"></i> [DESPACHO]
+                            </button>
+                        </td>
                     `;
 
-                    tr.querySelector(".btn-select-node").onclick = (e) => {
-                        e.stopPropagation();
-                        cargarCasoEnTerminalExterno(c.id);
-                    };
+                    const btnSelect = tr.querySelector(".btn-select-node");
+                    if (btnSelect) {
+                        btnSelect.onclick = (e) => {
+                            e.stopPropagation();
+                            cargarCasoEnTerminalExterno(c.id);
+                        };
+                    }
+
                     tr.onclick = () => cargarCasoEnTerminalExterno(c.id);
 
                     tbody.appendChild(tr);
                 });
+            } else {
+                tbody.innerHTML = `<tr><td colspan="6" class="text-center font-mono">[ERROR_CARGANDO_LOGISTICA]</td></tr>`;
             }
         } catch (err) {
             console.error("Fallo de stream en listado logístico:", err);
+            tbody.innerHTML = `<tr><td colspan="6" class="text-center font-mono text-danger">[ERROR_DE_CONEXION]</td></tr>`;
         }
     }
 
+    // ==========================================
+    // 📥 CARGAR DATOS EN EL MODAL NATIVO
+    // ==========================================
     async function cargarCasoEnTerminalExterno(id) {
         try {
+            Swal.fire({
+                title: 'CONSULTANDO REGISTRO...',
+                text: 'Mapeando datos logísticos del caso ID: ' + id,
+                background: '#ffffff',
+                color: '#0f172a',
+                showConfirmButton: false,
+                allowOutsideClick: false,
+                didOpen: () => { Swal.showLoading(); }
+            });
+
             const res = await fetch(`${API_URL}?action=obtener_caso&id=${id}`);
             const data = await res.json();
+
+            Swal.close();
 
             if (data.status === "success") {
                 const c = data.caso;
 
-                form.classList.add("cyber-active-form");
-                document.getElementById("btnGuardarLogistica").disabled = false;
-
                 document.getElementById("logIdCaso").value = c.id;
-                document.getElementById("logNumeroCaso").value = c.numero_caso;
-                document.getElementById("logHardware").value = `${c.equipo} ${c.marca}`.toUpperCase();
-                document.getElementById("logSerie").value = c.numero_serie;
-                document.getElementById("logFallaReportada").value = c.descripcion_problema;
+                document.getElementById("logNumeroCaso").value = c.numero_caso || '';
+                document.getElementById("logHardware").value = `${c.equipo || ''} ${c.marca || ''} ${c.modelo || ''}`.toUpperCase().trim();
+                document.getElementById("logSerie").value = c.numero_serie || '';
+                document.getElementById("logFallaReportada").value = c.descripcion_problema || '';
 
                 document.getElementById("selectProveedorLog").value = c.id_proveedor ?? "";
                 document.getElementById("logReferencia").value = c.referencia_proveedor ?? "";
@@ -112,59 +198,96 @@
 
                 if (c.fecha_envio_proveedor) {
                     document.getElementById("logFechaEnvio").value = c.fecha_envio_proveedor.split(' ')[0];
-                } else {
-                    document.getElementById("logFechaEnvio").value = new Date().toISOString().split('T')[0];
+                } else if (inputFecha) {
+                    inputFecha.value = new Date().toISOString().split('T')[0];
                 }
+
+                if (lblTituloModal) {
+                    lblTituloModal.textContent = `[DESPACHO_LOGÍSTICO: ${c.numero_caso}]`;
+                }
+
+                abrirModal();
+            } else {
+                Swal.fire("ERROR", data.message, "error");
             }
         } catch (err) {
-            Swal.fire("ERROR LOGÍSTICO", "Fallo al mapear datos del nodo externo.", "error");
+            Swal.close();
+            Swal.fire({
+                icon: "error",
+                title: "ERROR LOGÍSTICO",
+                text: "Fallo al mapear datos del nodo externo.",
+                background: '#ffffff',
+                color: '#dc2626'
+            });
         }
     }
 
-    form?.addEventListener("submit", async (e) => {
-        e.preventDefault();
+    // ==========================================
+    // 💾 CONFIRMAR DESPACHO DESDE EL MODAL
+    // ==========================================
+    if (form) {
+        form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            e.stopPropagation();
 
-        const datos = new FormData(form);
+            const datos = new FormData(form);
 
-        try {
-            Swal.fire({
-                title: "[SYNCHRONIZING_EXTERNAL_ROUTING...]",
-                allowOutsideClick: false,
-                didOpen: () => Swal.showLoading()
-            });
-
-            const res = await fetch(`${API_URL}?action=guardar_flujo_externo`, {
-                method: "POST",
-                body: datos
-            });
-            const r = await res.json();
-
-            if (r.status === "success") {
+            try {
                 Swal.fire({
-                    icon: "success",
-                    title: "[DISPATCH_COMMITTED]",
-                    text: r.message
+                    title: "SINCRONIZANDO GARANTÍA...",
+                    text: "Guardando datos de despacho logístico...",
+                    background: '#ffffff',
+                    color: '#0f172a',
+                    allowOutsideClick: false,
+                    didOpen: () => Swal.showLoading()
                 });
 
-                form.reset();
-                form.classList.remove("cyber-active-form");
-                document.getElementById("btnGuardarLogistica").disabled = true;
-                if (inputFecha) inputFecha.value = new Date().toISOString().split('T')[0];
+                const res = await fetch(`${API_URL}?action=guardar_flujo_externo`, {
+                    method: "POST",
+                    body: datos
+                });
+                const r = await res.json();
 
-                await listarMatrizLogistica();
-            } else {
-                Swal.fire("FALLO LOGÍSTICO", r.message, "error");
+                if (r.status === "success") {
+                    Swal.fire({
+                        icon: "success",
+                        title: "DESPACHO REGISTRADO",
+                        text: r.message,
+                        background: '#ffffff',
+                        color: '#0f172a',
+                        confirmButtonColor: '#0284c7'
+                    });
+
+                    cerrarModal();
+                    await listarMatrizLogistica();
+                } else {
+                    Swal.fire({
+                        icon: "error",
+                        title: "FALLO LOGÍSTICO",
+                        text: r.message,
+                        background: '#ffffff',
+                        color: '#dc2626'
+                    });
+                }
+            } catch (err) {
+                Swal.fire({
+                    icon: "error",
+                    title: "CRITICAL TRACKING ERROR",
+                    text: "Fallo la inyección asíncrona de logística.",
+                    background: '#ffffff',
+                    color: '#dc2626'
+                });
             }
-        } catch (err) {
-            Swal.fire("CRITICAL TRACKING ERROR", "Fallo la inyección asíncrona de logística.", "error");
-        }
-    });
+        });
+    }
 
-    buscador?.addEventListener("input", () => listarMatrizLogistica());
-    filtroAlcance?.addEventListener("change", () => listarMatrizLogistica());
+    // Listeners de Filtros
+    if (buscador) buscador.addEventListener("input", () => listarMatrizLogistica());
+    if (filtroAlcance) filtroAlcance.addEventListener("change", () => listarMatrizLogistica());
 
+    // Inicialización automática
     const triggerLogistica = setInterval(() => {
-        if (document.getElementById("formFlujoExterno")) {
+        if (document.getElementById("tablaLogistica")) {
             clearInterval(triggerLogistica);
             inicializarModuloLogistica();
         }

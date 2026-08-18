@@ -12,7 +12,7 @@ $id_rol = $_SESSION['id_rol'] ?? null;
         <?php if ($id_rol == 2): ?>
             <li class="nav-node-dropdown border-neon-blue">
                 <a href="#" class="node-trigger text-neon-blue">
-                    <i class="fa fa-shield"></i> [01] SYS_AUTH
+                    <i class="fa fa-shield"></i> [01] SYS_AUTH <i class="fa fa-caret-down node-arrow"></i>
                 </a>
                 <ul class="dropdown-terminal">
                     <li><a href="usuarios"><span class="t-cyan">//</span> GESTIÓN USUARIOS</a></li>
@@ -26,7 +26,7 @@ $id_rol = $_SESSION['id_rol'] ?? null;
         <?php if ($id_rol == 1 || $id_rol == 2): ?>
             <li class="nav-node-dropdown border-neon-yellow">
                 <a href="#" class="node-trigger text-neon-yellow">
-                    <i class="fa fa-wrench"></i> [02] RMA_CORE
+                    <i class="fa fa-wrench"></i> [02] RMA_CORE <i class="fa fa-caret-down node-arrow"></i>
                 </a>
                 <ul class="dropdown-terminal">
                     <li><a href="nuevoCaso"><span class="t-yellow">//</span> REGISTRO NUEVO</a></li>
@@ -41,7 +41,7 @@ $id_rol = $_SESSION['id_rol'] ?? null;
         <?php if ($id_rol !== null): ?>
             <li class="nav-node-dropdown border-neon-green">
                 <a href="#" class="node-trigger text-neon-green">
-                    <i class="fa fa-comments"></i> [03] COMMS_NODE
+                    <i class="fa fa-comments"></i> [03] COMMS_NODE <i class="fa fa-caret-down node-arrow"></i>
                 </a>
                 <ul class="dropdown-terminal">
                     <li><a href="clientes"><span class="t-green">//</span> DIRECTORIO CLIENTES</a></li>
@@ -54,7 +54,7 @@ $id_rol = $_SESSION['id_rol'] ?? null;
         <?php if ($id_rol == 2): ?>
             <li class="nav-node-dropdown border-neon-purple">
                 <a href="#" class="node-trigger text-neon-purple">
-                    <i class="fa fa-line-chart"></i> [04] BI_ANALYTICS
+                    <i class="fa fa-line-chart"></i> [04] BI_ANALYTICS <i class="fa fa-caret-down node-arrow"></i>
                 </a>
                 <ul class="dropdown-terminal">
                     <li><a href="dashboard"><span class="t-purple">//</span> EXECUTIVE DASHBOARD</a></li>
@@ -85,16 +85,17 @@ $id_rol = $_SESSION['id_rol'] ?? null;
 </nav>
 
 <style>
+    /* BARRA DE NAVEGACIÓN - CONTRASTE MIDNIGHT COMMAND */
     .cyber-nav-hub {
         position: relative;
-        margin: 15px 0 25px 0;
-        padding: 0 10px;
-        border-radius: 6px;
-        border: 1px solid rgba(0, 242, 255, 0.1);
+        margin: 15px 20px 25px 20px;
+        padding: 4px 15px;
+        border-radius: 8px;
+        border: 1px solid #1e293b;
+        background: #0f172a;
+        /* Azul marino oscuro de alto contraste */
+        box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.25), 0 0 15px rgba(2, 132, 199, 0.1);
         overflow: visible;
-        /* Crucial para que desplieguen los submenús */
-        background: rgba(10, 16, 32, 0.6);
-        backdrop-filter: blur(10px);
         z-index: 1000;
     }
 
@@ -104,11 +105,10 @@ $id_rol = $_SESSION['id_rol'] ?? null;
         left: 0;
         right: 0;
         bottom: 0;
-        background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
-            linear-gradient(90deg, rgba(255, 0, 0, 0.05), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.05));
-        background-size: 100% 3px, 3px 100%;
+        background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.15) 50%);
+        background-size: 100% 3px;
         pointer-events: none;
-        border-radius: 6px;
+        border-radius: 8px;
     }
 
     .nav-nodes-list {
@@ -122,16 +122,56 @@ $id_rol = $_SESSION['id_rol'] ?? null;
 
     .nav-node-dropdown {
         position: relative;
-        padding: 6px 0;
+        padding: 4px 0;
     }
 
-    /* Indicadores inferiores reactivos */
+    /* Colores Neón e Indicadores Inferiores */
+    .text-neon-blue {
+        color: #38bdf8 !important;
+    }
+
+    .text-neon-yellow {
+        color: #fbbf24 !important;
+    }
+
+    .text-neon-green {
+        color: #4ade80 !important;
+    }
+
+    .text-neon-purple {
+        color: #c084fc !important;
+    }
+
+    .text-neon-cyan {
+        color: #38bdf8 !important;
+    }
+
+    .t-cyan {
+        color: #38bdf8;
+        font-weight: bold;
+    }
+
+    .t-yellow {
+        color: #fbbf24;
+        font-weight: bold;
+    }
+
+    .t-green {
+        color: #4ade80;
+        font-weight: bold;
+    }
+
+    .t-purple {
+        color: #c084fc;
+        font-weight: bold;
+    }
+
     .nav-node-dropdown.border-neon-blue {
         border-bottom: 2px solid transparent;
     }
 
     .nav-node-dropdown.border-neon-blue:hover {
-        border-bottom-color: #00f2ff;
+        border-bottom-color: #38bdf8;
     }
 
     .nav-node-dropdown.border-neon-yellow {
@@ -139,7 +179,7 @@ $id_rol = $_SESSION['id_rol'] ?? null;
     }
 
     .nav-node-dropdown.border-neon-yellow:hover {
-        border-bottom-color: #ffca28;
+        border-bottom-color: #fbbf24;
     }
 
     .nav-node-dropdown.border-neon-green {
@@ -147,7 +187,7 @@ $id_rol = $_SESSION['id_rol'] ?? null;
     }
 
     .nav-node-dropdown.border-neon-green:hover {
-        border-bottom-color: #00ff66;
+        border-bottom-color: #4ade80;
     }
 
     .nav-node-dropdown.border-neon-purple {
@@ -155,50 +195,80 @@ $id_rol = $_SESSION['id_rol'] ?? null;
     }
 
     .nav-node-dropdown.border-neon-purple:hover {
-        border-bottom-color: #9d4edd;
+        border-bottom-color: #c084fc;
     }
 
     .node-trigger {
-        display: block;
-        padding: 12px 20px;
-        color: #a2b4cd;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 18px;
+        color: #94a3b8;
         font-size: 0.88rem;
         font-weight: 600;
         text-decoration: none;
         letter-spacing: 0.5px;
         transition: all 0.2s ease;
+        border-radius: 4px;
     }
 
     .node-trigger:hover {
-        background: rgba(255, 255, 255, 0.01);
+        background: rgba(255, 255, 255, 0.05);
+        color: #ffffff !important;
         text-shadow: 0 0 8px currentColor;
     }
 
-    /* DROPDOWNS ESTILO CONSOLA */
+    /* Ícono Flecha */
+    .node-arrow {
+        font-size: 0.75rem;
+        margin-left: 4px;
+        transition: transform 0.25s ease;
+        opacity: 0.6;
+    }
+
+    .nav-node-dropdown:hover .node-arrow {
+        transform: rotate(180deg);
+        opacity: 1;
+    }
+
+    /* DROPDOWNS TERMINAL DE ALTO CONTRASTE */
     .dropdown-terminal {
         position: absolute;
         top: 100%;
         left: 0;
-        min-width: 220px;
-        background-color: #060b19;
-        border: 1px solid #101c38;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.65);
+        min-width: 230px;
+        background-color: #0f172a;
+        border: 1px solid #334155;
+        box-shadow: 0 20px 30px rgba(0, 0, 0, 0.35);
         list-style: none;
-        padding: 6px 0;
-        margin: 4px 0 0 0;
+        padding: 8px 0;
+        margin: 6px 0 0 0;
         display: none;
-        border-radius: 4px;
+        border-radius: 6px;
         z-index: 2000;
     }
 
     .nav-node-dropdown:hover .dropdown-terminal {
         display: block;
+        animation: dropFade 0.2s ease-out;
+    }
+
+    @keyframes dropFade {
+        from {
+            opacity: 0;
+            transform: translateY(-5px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
 
     .dropdown-terminal li a {
         display: block;
         padding: 9px 18px;
-        color: #94a3b8;
+        color: #cbd5e1;
         font-size: 0.8rem;
         text-decoration: none;
         letter-spacing: 0.5px;
@@ -206,28 +276,28 @@ $id_rol = $_SESSION['id_rol'] ?? null;
     }
 
     .dropdown-terminal li a:hover {
-        background-color: rgba(0, 242, 255, 0.04);
-        color: #fff !important;
-        padding-left: 24px;
-        /* Efecto terminal displacement */
+        background-color: rgba(56, 189, 248, 0.1);
+        color: #ffffff !important;
+        padding-left: 22px;
     }
 
     .m-left-auto {
         margin-left: auto;
     }
 
-    /* Desconexión Crítica de Nodo */
+    /* Botón de Desconexión */
     .cerrar-sesion-cyber {
-        color: #ff3333 !important;
-        border: 1px solid rgba(255, 51, 51, 0.2);
+        color: #f87171 !important;
+        border: 1px solid rgba(248, 113, 113, 0.3);
         border-radius: 4px;
-        padding: 7px 14px !important;
-        margin-right: 8px;
+        padding: 6px 14px !important;
+        margin-right: 4px;
     }
 
     .cerrar-sesion-cyber:hover {
-        background: rgba(255, 51, 51, 0.12) !important;
-        box-shadow: 0 0 10px rgba(255, 51, 51, 0.35);
-        text-shadow: 0 0 5px #ff3333;
+        background: rgba(239, 68, 68, 0.15) !important;
+        border-color: #ef4444;
+        box-shadow: 0 0 10px rgba(239, 68, 68, 0.3);
+        color: #ffffff !important;
     }
 </style>
