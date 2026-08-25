@@ -38,16 +38,16 @@ if ($usuarioLogueado && $ruta === "login") {
     if ($idRol === 1) {
         $ruta = "perfil_tecnico";
     } else {
-        $ruta = "inicio";
+        $ruta = "dashboard";
     }
 }
 
 if ($usuarioLogueado) {
-    if ($idRol === 1 && $ruta === "inicio") {
+    if ($idRol === 1 && ($ruta === "inicio" || $ruta === "dashboard")) {
         $ruta = "perfil_tecnico";
     }
     if ($idRol === 2 && $ruta === "perfil_tecnico") {
-        $ruta = "inicio";
+        $ruta = "dashboard";
     }
 }
 
@@ -75,7 +75,6 @@ $sinMenuPrivado = $esPublica;
     <!-- CSS Unificado Cyberpunk Light -->
     <link rel="stylesheet" href="vistas/css/estilos.css">
 
-    <!-- Estilos de Ajuste Global para la Nueva Paleta -->
     <style>
         body,
         .wrapper,
@@ -109,10 +108,7 @@ $bodyClass = $sinMenuPrivado ? 'login-page' : 'hold-transition skin-blue layout-
 
     <?php if (!$sinMenuPrivado): ?>
         <div class="wrapper">
-            <?php
-            include "menu.php";
-            ?>
-
+            <?php include "menu.php"; ?>
         <?php endif; ?>
 
         <?php
@@ -134,17 +130,14 @@ $bodyClass = $sinMenuPrivado ? 'login-page' : 'hold-transition skin-blue layout-
                 break;
 
             case "forgot-password":
-                include __DIR__ . "/modulos/forgot-password.php";
-                break;
-
             case "reset-password":
-                include __DIR__ . "/modulos/reset-password.php";
-                break;
-
             case "register":
-                include __DIR__ . "/modulos/register.php";
+                if (file_exists(__DIR__ . "/vistas/modulos/inicio/" . $ruta . ".php")) {
+                    include __DIR__ . "/vistas/modulos/inicio/" . $ruta . ".php";
+                }
                 break;
 
+            // DASHBOARD EJECUTIVO BI
             case "inicio":
             case "dashboard":
                 include __DIR__ . "/vistas/modulos/inicio/inicio.php";
@@ -202,16 +195,48 @@ $bodyClass = $sinMenuPrivado ? 'login-page' : 'hold-transition skin-blue layout-
                 include __DIR__ . "/vistas/modulos/clientes/notificaciones.php";
                 break;
 
-            case "sla-procesos":
-            case "performance-tecnico":
-            case "confiabilidad-producto":
-            case "auditoria-proveedores":
-            case "recurrencia-clientes":
-                include __DIR__ . "/vistas/modulos/inicio/inicio.php";
+            case "stockCatalogo":
+                include __DIR__ . "/vistas/modulos/inventario/stockCatalogo.php";
+                break;
+
+            case "stockAlertas":
+                include __DIR__ . "/vistas/modulos/inventario/stockAlertas.php";
+                break;
+
+            case "stockAsignaciones":
+                include __DIR__ . "/vistas/modulos/inventario/stockAsignaciones.php";
+                break;
+
+            case "stockMovimientos":
+                include __DIR__ . "/vistas/modulos/inventario/stockMovimientos.php";
+                break;
+
+            case "slaProcesos":
+                include __DIR__ . "/vistas/modulos/bi/slaProcesos.php";
+                break;
+
+            case "performanceTecnico":
+                include __DIR__ . "/vistas/modulos/bi/performanceTecnico.php";
+                break;
+
+            case "confiabilidadProducto":
+                include __DIR__ . "/vistas/modulos/bi/confiabilidadProducto.php";
+                break;
+
+            case "auditoriaProveedores":
+                include __DIR__ . "/vistas/modulos/bi/auditoriaProveedores.php";
+                break;
+
+            case "recurrenciaClientes":
+                include __DIR__ . "/vistas/modulos/bi/recurrenciaClientes.php";
                 break;
 
             default:
-                include __DIR__ . "/modulos/404.php";
+                if (file_exists(__DIR__ . "/vistas/modulos/404.php")) {
+                    include __DIR__ . "/vistas/modulos/404.php";
+                } else {
+                    echo '<div class="content-wrapper p-4"><h3 class="text-danger font-mono">⚠️ 404 - MÓDULO NO ENCONTRADO</h3><p class="font-mono">La ruta especificada no existe en la matriz del sistema.</p></div>';
+                }
                 break;
         }
         ?>
