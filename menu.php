@@ -9,8 +9,16 @@ $id_rol = $_SESSION['id_rol'] ?? null;
     <div class="nav-scan-lines"></div>
     <ul class="nav-nodes-list">
 
-        <!-- [01] SEGURIDAD Y CONFIGURACIÓN (ROL 2 - ADMIN) -->
+        <!-- LOGO DE MARCA -->
+        <li class="brand-node-logo">
+            <a href="dashboard" class="logo-link-trigger">
+                <img src="vistas/img/micrologo3.png" alt="Microexpress Logo" class="cyber-nav-logo">
+            </a>
+        </li>
+
+        <!-- [01] SEGURIDAD Y CONFIGURACIÓN -->
         <?php if ($id_rol == 2): ?>
+            <!-- ADMINISTRADOR: ACCESO COMPLETO -->
             <li class="nav-node-dropdown border-neon-blue">
                 <a href="#" class="node-trigger text-neon-blue">
                     <i class="fa fa-shield"></i> [01] Configuración <i class="fa fa-caret-down node-arrow"></i>
@@ -22,9 +30,16 @@ $id_rol = $_SESSION['id_rol'] ?? null;
                     <li><a href="configuracion"><span class="t-cyan">//</span> PARÁMETROS DEL SISTEMA</a></li>
                 </ul>
             </li>
+        <?php elseif ($id_rol == 1): ?>
+            <!-- TÉCNICO: ACCESO A MI PERFIL -->
+            <li class="nav-node-dropdown border-neon-blue">
+                <a href="perfil" class="node-trigger text-neon-blue">
+                    <i class="fa fa-user"></i> [01] Mi Perfil
+                </a>
+            </li>
         <?php endif; ?>
 
-        <!-- [02] GESTIÓN OPERATIVA RMA (ROLES 1 Y 2 - TÉCNICOS / ADMIN) -->
+        <!-- [02] GESTIÓN OPERATIVA RMA (TÉCNICOS Y ADMIN) -->
         <?php if ($id_rol == 1 || $id_rol == 2): ?>
             <li class="nav-node-dropdown border-neon-yellow">
                 <a href="#" class="node-trigger text-neon-yellow">
@@ -54,8 +69,9 @@ $id_rol = $_SESSION['id_rol'] ?? null;
             </li>
         <?php endif; ?>
 
-        <!-- [04] GESTIÓN DE INVENTARIO Y STOCK (ROL 2 - ADMIN / PROPIO COLOR NARANJA) -->
+        <!-- [04] GESTIÓN DE INVENTARIO Y STOCK -->
         <?php if ($id_rol == 2): ?>
+            <!-- ADMIN: CONTROL Y KARDEX TOTAL -->
             <li class="nav-node-dropdown border-neon-orange">
                 <a href="#" class="node-trigger text-neon-orange">
                     <i class="fa fa-cubes"></i> [04] Inventario <i class="fa fa-caret-down node-arrow"></i>
@@ -67,10 +83,22 @@ $id_rol = $_SESSION['id_rol'] ?? null;
                     <li><a href="stockMovimientos"><span class="t-orange">//</span> KARDEX DE MOVIMIENTOS</a></li>
                 </ul>
             </li>
+        <?php elseif ($id_rol == 1): ?>
+            <!-- TÉCNICO: CONSULTA DE REPUESTOS Y ASIGNACIÓN A CASOS -->
+            <li class="nav-node-dropdown border-neon-orange">
+                <a href="#" class="node-trigger text-neon-orange">
+                    <i class="fa fa-cubes"></i> [04] Insumos <i class="fa fa-caret-down node-arrow"></i>
+                </a>
+                <ul class="dropdown-terminal">
+                    <li><a href="stockCatalogo"><span class="t-orange">//</span> CONSULTA DE REPUESTOS</a></li>
+                    <li><a href="stockAsignaciones"><span class="t-orange">//</span> APLICAR INSUMOS A CASOS</a></li>
+                </ul>
+            </li>
         <?php endif; ?>
 
-        <!-- [05] ANALÍTICA E INTELIGENCIA BI (ROL 2 - ADMIN) -->
+        <!-- [05] ANALÍTICA E INTELIGENCIA BI -->
         <?php if ($id_rol == 2): ?>
+            <!-- ADMIN: DASHBOARD EJECUTIVO Y AUDITORÍAS TOTALES -->
             <li class="nav-node-dropdown border-neon-purple">
                 <a href="#" class="node-trigger text-neon-purple">
                     <i class="fa fa-line-chart"></i> [05] Analítica BI <i class="fa fa-caret-down node-arrow"></i>
@@ -84,8 +112,18 @@ $id_rol = $_SESSION['id_rol'] ?? null;
                     <li><a href="recurrenciaClientes"><span class="t-purple">//</span> FIDELIZACIÓN CLIENTES</a></li>
                 </ul>
             </li>
+        <?php elseif ($id_rol == 1): ?>
+            <!-- TÉCNICO: MONITOREO DE TIEMPOS DE CICLO Y PERFORMANCE OPERATIVA -->
+            <li class="nav-node-dropdown border-neon-purple">
+                <a href="#" class="node-trigger text-neon-purple">
+                    <i class="fa fa-line-chart"></i> [05] Tiempos & SLA <i class="fa fa-caret-down node-arrow"></i>
+                </a>
+                <ul class="dropdown-terminal">
+                    <li><a href="slaProcesos"><span class="t-purple">//</span> TIEMPOS DE CICLO (SLA)</a></li>
+                    <li><a href="performanceTecnico"><span class="t-purple">//</span> PERFORMANCE DE TALLER</a></li>
+                </ul>
+            </li>
         <?php endif; ?>
-
 
         <!-- ACCIONES DE SESIÓN -->
         <?php if ($id_rol !== null): ?>
@@ -140,12 +178,63 @@ $id_rol = $_SESSION['id_rol'] ?? null;
         font-family: 'Share Tech Mono', monospace;
     }
 
-    .nav-node-dropdown {
-        position: relative;
-        padding: 4px 0;
+    /* ESTILOS DEL LOGO */
+    .brand-node-logo {
+        display: flex;
+        align-items: center;
+        margin-right: 15px;
+        padding-right: 12px;
+        border-right: 1px solid #334155;
     }
 
-    /* Colores Neón e Indicadores Inferiores */
+    .logo-link-trigger {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+    }
+
+    .cyber-nav-logo {
+        height: 32px;
+        width: auto;
+        max-width: 140px;
+        object-fit: contain;
+        filter: drop-shadow(0 0 4px rgba(56, 189, 248, 0.3));
+        transition: transform 0.2s ease, filter 0.2s ease;
+    }
+
+    .logo-link-trigger:hover .cyber-nav-logo {
+        transform: scale(1.04);
+        filter: drop-shadow(0 0 8px rgba(56, 189, 248, 0.6));
+    }
+
+    .nav-node-dropdown {
+        position: relative;
+        padding: 6px 0;
+        margin-right: 4px;
+    }
+
+    /* BARRAS SEPARADORAS VERTICALES DE COLOR NEÓN */
+    .nav-node-dropdown.border-neon-blue {
+        border-left: 3px solid #38bdf8;
+    }
+
+    .nav-node-dropdown.border-neon-yellow {
+        border-left: 3px solid #fbbf24;
+    }
+
+    .nav-node-dropdown.border-neon-green {
+        border-left: 3px solid #4ade80;
+    }
+
+    .nav-node-dropdown.border-neon-orange {
+        border-left: 3px solid #f97316;
+    }
+
+    .nav-node-dropdown.border-neon-purple {
+        border-left: 3px solid #c084fc;
+    }
+
+    /* Colores Neón e Indicadores */
     .text-neon-blue {
         color: #38bdf8 !important;
     }
@@ -158,12 +247,12 @@ $id_rol = $_SESSION['id_rol'] ?? null;
         color: #4ade80 !important;
     }
 
-    .text-neon-purple {
-        color: #c084fc !important;
-    }
-
     .text-neon-orange {
         color: #f97316 !important;
+    }
+
+    .text-neon-purple {
+        color: #c084fc !important;
     }
 
     .text-neon-cyan {
@@ -185,69 +274,28 @@ $id_rol = $_SESSION['id_rol'] ?? null;
         font-weight: bold;
     }
 
-    .t-purple {
-        color: #c084fc;
-        font-weight: bold;
-    }
-
     .t-orange {
         color: #f97316;
         font-weight: bold;
     }
 
-    /* Bordes de hover por módulo */
-    .nav-node-dropdown.border-neon-blue {
-        border-bottom: 2px solid transparent;
-    }
-
-    .nav-node-dropdown.border-neon-blue:hover {
-        border-bottom-color: #38bdf8;
-    }
-
-    .nav-node-dropdown.border-neon-yellow {
-        border-bottom: 2px solid transparent;
-    }
-
-    .nav-node-dropdown.border-neon-yellow:hover {
-        border-bottom-color: #fbbf24;
-    }
-
-    .nav-node-dropdown.border-neon-green {
-        border-bottom: 2px solid transparent;
-    }
-
-    .nav-node-dropdown.border-neon-green:hover {
-        border-bottom-color: #4ade80;
-    }
-
-    .nav-node-dropdown.border-neon-purple {
-        border-bottom: 2px solid transparent;
-    }
-
-    .nav-node-dropdown.border-neon-purple:hover {
-        border-bottom-color: #c084fc;
-    }
-
-    .nav-node-dropdown.border-neon-orange {
-        border-bottom: 2px solid transparent;
-    }
-
-    .nav-node-dropdown.border-neon-orange:hover {
-        border-bottom-color: #f97316;
+    .t-purple {
+        color: #c084fc;
+        font-weight: bold;
     }
 
     .node-trigger {
         display: flex;
         align-items: center;
-        gap: 8px;
-        padding: 10px 18px;
+        gap: 6px;
+        padding: 8px 12px;
         color: #94a3b8;
-        font-size: 0.88rem;
+        font-size: 0.85rem;
         font-weight: 600;
         text-decoration: none;
         letter-spacing: 0.5px;
         transition: all 0.2s ease;
-        border-radius: 4px;
+        border-radius: 0 4px 4px 0;
     }
 
     .node-trigger:hover {
@@ -269,7 +317,7 @@ $id_rol = $_SESSION['id_rol'] ?? null;
         opacity: 1;
     }
 
-    /* DROPDOWNS TERMINAL DE ALTO CONTRASTE */
+    /* DROPDOWNS TERMINAL DE ALTO CONTRASTE CON PUENTE ANTI-PÉRDIDA */
     .dropdown-terminal {
         position: absolute;
         top: 100%;
@@ -277,24 +325,34 @@ $id_rol = $_SESSION['id_rol'] ?? null;
         min-width: 250px;
         background-color: #0f172a;
         border: 1px solid #334155;
-        box-shadow: 0 20px 30px rgba(0, 0, 0, 0.35);
+        box-shadow: 0 20px 30px rgba(0, 0, 0, 0.4);
         list-style: none;
         padding: 8px 0;
-        margin: 6px 0 0 0;
+        margin: 0;
         display: none;
-        border-radius: 6px;
+        border-radius: 0 6px 6px 6px;
         z-index: 2000;
+    }
+
+    .dropdown-terminal::before {
+        content: '';
+        position: absolute;
+        top: -12px;
+        left: 0;
+        right: 0;
+        height: 12px;
+        background: transparent;
     }
 
     .nav-node-dropdown:hover .dropdown-terminal {
         display: block;
-        animation: dropFade 0.2s ease-out;
+        animation: dropFade 0.18s ease-out;
     }
 
     @keyframes dropFade {
         from {
             opacity: 0;
-            transform: translateY(-5px);
+            transform: translateY(-4px);
         }
 
         to {
@@ -305,7 +363,7 @@ $id_rol = $_SESSION['id_rol'] ?? null;
 
     .dropdown-terminal li a {
         display: block;
-        padding: 9px 18px;
+        padding: 10px 18px;
         color: #cbd5e1;
         font-size: 0.8rem;
         text-decoration: none;
@@ -314,7 +372,7 @@ $id_rol = $_SESSION['id_rol'] ?? null;
     }
 
     .dropdown-terminal li a:hover {
-        background-color: rgba(249, 115, 22, 0.1);
+        background-color: rgba(249, 115, 22, 0.12);
         color: #ffffff !important;
         padding-left: 22px;
     }

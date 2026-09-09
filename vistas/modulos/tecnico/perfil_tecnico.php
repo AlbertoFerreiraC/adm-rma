@@ -3,16 +3,28 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Datos de sesión para perfil de operario
-$nombreTecnico = $_SESSION['nombre_usuario'] ?? 'Alejandro Rodríguez';
-$rolTecnico = 'Técnico Especialista en Microelectrónica';
-$avatarTecnico = 'https://i.imgur.com/wHSp640.png'; // Avatar dummy tecnológico
+// Datos dinámicos del operario desde sesión
+$idTecnicoActivo = $_SESSION['id'] ?? $_SESSION['id_usuario'] ?? null;
+$nombreTecnico = $_SESSION['nombre'] ?? $_SESSION['nombre_usuario'] ?? 'Técnico de Taller';
+$rolTecnico = 'Técnico Especialista en Hardware & RMA';
+$avatarTecnico = 'vistas/img/plantilla/icono.png'; // Avatar por defecto del sistema
 ?>
 
-<input type="hidden" name="rol" id="rol" value="<?php echo $_SESSION['id_rol'] ?? '3'; ?>">
-<input type="hidden" name="id_tecnico" id="id_tecnico" value="<?php echo $_SESSION['id_usuario'] ?? '102'; ?>">
+<input type="hidden" name="rol" id="rol" value="<?php echo $_SESSION['id_rol'] ?? '1'; ?>">
+<input type="hidden" name="id_tecnico" id="id_tecnico" value="<?php echo $idTecnicoActivo; ?>">
 
-<div class="content-wrapper dashboard-cyber-wrapper">
+<div class="content-wrapper dashboard-cyber-wrapper style-relative">
+
+    <!-- OVERLAY LOADER CYBERPUNK EN VIVO -->
+    <div id="cyberLoaderTecnico" class="cyber-loader-overlay">
+        <div class="loader-content-hud">
+            <div class="cyber-spinner-ring border-neon-cyan"></div>
+            <span class="hud-loading-text font-mono">[02] RMA_BENCH // CARGANDO_ESTACIÓN_DE_TRABAJO...</span>
+            <div class="hud-progress-bar">
+                <div class="hud-progress-fill"></div>
+            </div>
+        </div>
+    </div>
 
     <!-- HEADER PRINCIPAL DE PERFIL DE TÉCNICO -->
     <header class="cyber-header">
@@ -25,38 +37,44 @@ $avatarTecnico = 'https://i.imgur.com/wHSp640.png'; // Avatar dummy tecnológico
         </div>
 
         <div class="tec-session-profile">
-            <div class="profile-avatar-wrapper">
-                <img src="<?php echo $avatarTecnico; ?>" alt="Avatar Operario" class="profile-avatar">
-                <span class="online-indicator-dot"></span>
-            </div>
             <div class="profile-info-stack">
                 <span class="profile-label">OPERARIO EN SESIÓN</span>
-                <span class="profile-name text-neon-cyan font-mono"><?php echo $nombreTecnico; ?></span>
+                <span
+                    class="profile-name text-neon-cyan font-mono"><?php echo htmlspecialchars($nombreTecnico); ?></span>
                 <span class="profile-role font-mono"><?php echo $rolTecnico; ?></span>
             </div>
             <div class="profile-bahia-tag font-mono">
                 <span class="tag-title">BAHÍA ASIGNADA</span>
-                <span class="tag-val text-neon-purple">TALLER_B04</span>
+                <span class="tag-val text-neon-purple"
+                    id="tagBahiaAsignada">BAHÍA_T<?php echo str_pad($idTecnicoActivo ?? 1, 2, '0', STR_PAD_LEFT); ?></span>
+            </div>
+            <!-- NODO DE FECHA Y HORA EN TIEMPO REAL -->
+            <div class="profile-bahia-tag font-mono border-left-cyan">
+                <span class="tag-title">RELOJ DEL SISTEMA</span>
+                <span class="tag-val text-neon-cyan" id="relojSistemaTecnico">00/00/0000 00:00:00</span>
             </div>
         </div>
     </header>
 
     <!-- BARRA DE CONTROL DE ACCIONES TÉCNICAS -->
     <div class="cyber-panel-card glass-panel-neon border-neon-cyan tec-action-control-bar mt-4">
-        <button type="button" class="btn-cyber-add" id="btnNuevoRmaTecnico">
+        <a href="nuevoCaso" class="btn-cyber-add"
+            style="text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
             <i class="fa fa-plus-circle"></i> INGRESO NUEVO RMA (NUEVA ORDEN)
-        </button>
+        </a>
         <div class="tec-utility-buttons">
-            <button type="button" class="btn-terminal-edit" id="btnReimprimirQr">
+            <button type="button" class="btn-terminal-edit" id="btnReimprimirQrGlobal"
+                onclick="solicitarImpresionGlobal('qr')">
                 <i class="fa fa-qrcode"></i> REIMPRIMIR CÓDIGO QR
             </button>
-            <button type="button" class="btn-terminal-view" id="btnImprimirEtiqueta">
+            <button type="button" class="btn-terminal-view" id="btnImprimirEtiquetaGlobal"
+                onclick="solicitarImpresionGlobal('ticket')">
                 <i class="fa fa-print"></i> ETIQUETA TÉRMICA DE EMBALAJE
             </button>
         </div>
     </div>
 
-    <!-- TARJETAS DE KPIS DE PRODUCCIÓN -->
+    <!-- TARJETAS DE KPIS DE PRODUCCIÓN EN TIEMPO REAL -->
     <div class="tec-metrics-row mt-4">
 
         <div class="cyber-kpi-card glass-panel-neon border-neon-yellow">
@@ -65,21 +83,21 @@ $avatarTecnico = 'https://i.imgur.com/wHSp640.png'; // Avatar dummy tecnológico
                 <span class="pulse-dot-yellow"></span>
             </div>
             <div class="kpi-body-compact font-mono">
-                <h3 class="text-neon-yellow">14</h3>
+                <h3 class="text-neon-yellow" id="kpiAsignadas">0</h3>
                 <p class="kpi-title-text">Máquinas asignadas</p>
             </div>
-            <div class="kpi-footer-meta font-mono">5 en diagnóstico · 9 en reparación</div>
+            <div class="kpi-footer-meta font-mono" id="kpiSubColaDetalle">0 en diag. · 0 en rep.</div>
         </div>
 
         <div class="cyber-kpi-card glass-panel-neon border-neon-green">
             <div class="kpi-header-inline font-mono">
                 <span class="kpi-label-code">PRODUCCIÓN // DIARIA</span>
-                <span class="system-badge-live"
-                    style="color: var(--neon-green-dark); border-color: var(--neon-green-dark); background: rgba(21,128,61,0.08);">CUOTA
-                    ALCANZADA</span>
+                <span class="system-badge-live" id="badgeMetaProd"
+                    style="color: var(--neon-green-dark); border-color: var(--neon-green-dark); background: rgba(21,128,61,0.08);">EN
+                    PROGRESO</span>
             </div>
             <div class="kpi-body-compact font-mono">
-                <h3 class="green-accent">6</h3>
+                <h3 class="green-accent" id="kpiReparadosHoy">0</h3>
                 <p class="kpi-title-text">Reparados hoy</p>
             </div>
             <div class="kpi-footer-meta font-mono">Meta base del laboratorio: 5</div>
@@ -88,25 +106,25 @@ $avatarTecnico = 'https://i.imgur.com/wHSp640.png'; // Avatar dummy tecnológico
         <div class="cyber-kpi-card glass-panel-neon border-neon-blue">
             <div class="kpi-header-inline font-mono">
                 <span class="kpi-label-code">CONTROLES // EFECTIVIDAD</span>
-                <span class="t-cyan">CALIDAD GLOBAL</span>
+                <span class="t-cyan">CALIDAD TALLER</span>
             </div>
             <div class="kpi-body-compact font-mono">
-                <h3 class="t-cyan">97.8%</h3>
+                <h3 class="t-cyan" id="kpiTasaExito">0%</h3>
                 <p class="kpi-title-text">Tasa de éxito</p>
             </div>
-            <div class="kpi-footer-meta font-mono">0 reingresos reportados este mes</div>
+            <div class="kpi-footer-meta font-mono" id="kpiReingresosMeta">0 reingresos este mes</div>
         </div>
 
         <div class="cyber-kpi-card glass-panel-neon border-neon-red critical-alert-pulse">
             <div class="kpi-header-inline font-mono">
                 <span class="text-neon-red">LOGÍSTICA // STOCK</span>
-                <span class="text-neon-red blink-anim">⚠️ RETRASO</span>
+                <span class="text-neon-red blink-anim">⚠️ DETENIDOS</span>
             </div>
             <div class="kpi-body-compact font-mono">
-                <h3 class="text-neon-red">2</h3>
+                <h3 class="text-neon-red" id="kpiTrabadas">0</h3>
                 <p class="kpi-title-text text-neon-red">Órdenes trabadas</p>
             </div>
-            <div class="kpi-footer-meta font-mono text-neon-red">En espera de repuestos de proveedor</div>
+            <div class="kpi-footer-meta font-mono text-neon-red">En espera de repuesto / proveedor</div>
         </div>
 
     </div>
@@ -123,7 +141,7 @@ $avatarTecnico = 'https://i.imgur.com/wHSp640.png'; // Avatar dummy tecnológico
             </div>
 
             <div class="panel-cyber-body-table mt-3 font-mono">
-                <table class="cyber-mini-table">
+                <table class="cyber-mini-table" id="tablaMaquinasProceso">
                     <thead>
                         <tr>
                             <th>Código</th>
@@ -134,45 +152,7 @@ $avatarTecnico = 'https://i.imgur.com/wHSp640.png'; // Avatar dummy tecnológico
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td class="t-cyan font-mono">RMA-0247</td>
-                            <td><strong>PC Gamer Custom</strong><br><small class="text-muted-cyan">M. García (Asus
-                                    Z790)</small></td>
-                            <td><span class="badge-status-cyber status-default">En Reparación</span></td>
-                            <td class="text-truncate-tec">Corto en línea de 12V VRM</td>
-                            <td class="text-right">
-                                <button type="button" class="btn-terminal-edit"
-                                    onclick="abrirGestionTrabajo('RMA-0247')" title="Procesar Orden">⚙️</button>
-                                <button type="button" class="btn-terminal-view"
-                                    onclick="imprimirTicketEquipo('RMA-0247')" title="Imprimir Ticket">🖨️</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="t-cyan font-mono">RMA-0246</td>
-                            <td><strong>Laptop Lenovo V15</strong><br><small class="text-muted-cyan">J. Benítez</small>
-                            </td>
-                            <td><span class="badge-status-cyber status-1">En Diagnóstico</span></td>
-                            <td class="text-truncate-tec">No da video, parpadea LED</td>
-                            <td class="text-right">
-                                <button type="button" class="btn-terminal-edit"
-                                    onclick="abrirGestionTrabajo('RMA-0246')" title="Procesar Orden">⚙️</button>
-                                <button type="button" class="btn-terminal-view"
-                                    onclick="imprimirTicketEquipo('RMA-0246')" title="Imprimir Ticket">🖨️</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="t-cyan font-mono">RMA-0241</td>
-                            <td><strong>Tarjeta de Video RTX 4070</strong><br><small class="text-muted-cyan">Soporte
-                                    Corp.</small></td>
-                            <td><span class="badge-status-cyber status-external">Espera de Repuesto</span></td>
-                            <td class="text-truncate-tec">Faltan integrados VRAM</td>
-                            <td class="text-right">
-                                <button type="button" class="btn-terminal-edit"
-                                    onclick="abrirGestionTrabajo('RMA-0241')" title="Procesar Orden">⚙️</button>
-                                <button type="button" class="btn-terminal-view"
-                                    onclick="imprimirTicketEquipo('RMA-0241')" title="Imprimir Ticket">🖨️</button>
-                            </td>
-                        </tr>
+                        <!-- Carga dinámica vía JS -->
                     </tbody>
                 </table>
             </div>
@@ -187,7 +167,7 @@ $avatarTecnico = 'https://i.imgur.com/wHSp640.png'; // Avatar dummy tecnológico
             </div>
 
             <div class="panel-cyber-body-table mt-3 font-mono">
-                <table class="cyber-mini-table">
+                <table class="cyber-mini-table" id="tablaDespachosRecientes">
                     <thead>
                         <tr>
                             <th>Código</th>
@@ -197,36 +177,7 @@ $avatarTecnico = 'https://i.imgur.com/wHSp640.png'; // Avatar dummy tecnológico
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td class="t-cyan font-mono">RMA-0239</td>
-                            <td><strong>MacBook Pro M1</strong><br><small class="green-accent">Reballing de procesador
-                                    exitoso</small></td>
-                            <td class="font-mono">Hoy 11:30</td>
-                            <td class="text-right">
-                                <button type="button" class="btn-terminal-view"
-                                    onclick="reimprimirEtiquetaRma('RMA-0239')" title="Reimprimir QR">📷</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="t-cyan font-mono">RMA-0235</td>
-                            <td><strong>Monitor ViewSonic 24"</strong><br><small class="green-accent">Cambio de
-                                    capacitores inflados</small></td>
-                            <td class="font-mono">Ayer</td>
-                            <td class="text-right">
-                                <button type="button" class="btn-terminal-view"
-                                    onclick="reimprimirEtiquetaRma('RMA-0235')" title="Reimprimir QR">📷</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="t-cyan font-mono">RMA-0230</td>
-                            <td><strong>PC de Escritorio HP</strong><br><small class="green-accent">Mantenimiento
-                                    químico completo</small></td>
-                            <td class="font-mono">15 Jun 2026</td>
-                            <td class="text-right">
-                                <button type="button" class="btn-terminal-view"
-                                    onclick="reimprimirEtiquetaRma('RMA-0230')" title="Reimprimir QR">📷</button>
-                            </td>
-                        </tr>
+                        <!-- Carga dinámica vía JS -->
                     </tbody>
                 </table>
             </div>
@@ -252,24 +203,20 @@ $avatarTecnico = 'https://i.imgur.com/wHSp640.png'; // Avatar dummy tecnológico
         <form id="formAvanceTecnico" autocomplete="off" method="POST" onsubmit="return false;">
             <div class="modal-body font-mono">
                 <input type="hidden" id="modalIdRma">
+                <input type="hidden" id="modalNumCasoRma">
 
                 <div class="cyber-form-group-row mb-3"
                     style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                     <div class="cyber-form-group">
                         <label class="node-label">ESTADO DEL EQUIPO EN BANCO</label>
                         <select id="selectEstadoRma" class="cyber-input">
-                            <option value="diagnostico">🔬 En Diagnóstico Avanzado</option>
-                            <option value="reparacion">🔧 En Proceso de Reparación</option>
-                            <option value="espera_repuesto">⏳ Detenido - Falta de Insumo</option>
-                            <option value="listo">✅ Reparado / Pasar a Control</option>
+                            <!-- Carga dinámica desde la BD -->
                         </select>
                     </div>
                     <div class="cyber-form-group">
-                        <label class="node-label">INSUMOS APLICADOS</label>
+                        <label class="node-label">INSUMO EN STOCK A APLICAR</label>
                         <select id="selectInsumoTaller" class="cyber-input">
-                            <option value="">-- Sin consumibles añadidos --</option>
-                            <option value="pasta">Pasta Térmica Arctic MX-4</option>
-                            <option value="pads">Thermal Pads Alta Densidad</option>
+                            <!-- Carga dinámica del stock -->
                         </select>
                     </div>
                 </div>
@@ -277,14 +224,14 @@ $avatarTecnico = 'https://i.imgur.com/wHSp640.png'; // Avatar dummy tecnológico
                 <div class="cyber-form-group">
                     <label class="node-label text-yellow">// REPORTE TÉCNICO INTERNO DE LA FALLA Y SOLUCIÓN:</label>
                     <textarea id="txtDetalleTecnico" class="cyber-input cyber-textarea" rows="4"
-                        placeholder="Detalla los voltajes medidos, componentes sustituidos, etc..."></textarea>
+                        placeholder="Detalla los voltajes medidos, componentes sustituidos, observacion del banco..."></textarea>
                 </div>
             </div>
 
             <div class="modal-footer cyber-modal-footer">
-                <button type="button" class="btn-terminal-view"
-                    onclick="imprimirTicketEquipo(document.getElementById('modalIdRma').value)">
-                    <i class="fa fa-print"></i> [IMPRIMIR AVANCE]
+                <button type="button" class="btn-terminal-view" id="btnImprimirAvanceModal"
+                    onclick="imprimirTicketEquipo(document.getElementById('modalNumCasoRma').value)">
+                    <i class="fa fa-print"></i> [IMPRIMIR TICKET]
                 </button>
                 <div style="display: flex; gap: 10px;">
                     <button type="button" class="btn-cyber-cancel" onclick="cerrarModalGestion()">CANCELAR</button>
@@ -313,6 +260,84 @@ $avatarTecnico = 'https://i.imgur.com/wHSp640.png'; // Avatar dummy tecnológico
         --neon-red-dark: #dc2626;
         --neon-purple-dark: #7e22ce;
         --neon-yellow-dark: #d97706;
+    }
+
+    .style-relative {
+        position: relative;
+    }
+
+    /* OVERLAY LOADER CYBERPUNK HUD */
+    .cyber-loader-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(240, 244, 248, 0.92);
+        backdrop-filter: blur(6px);
+        z-index: 2000;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+
+    .loader-content-hud {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .cyber-spinner-ring {
+        width: 50px;
+        height: 50px;
+        border: 4px solid #cbd5e1;
+        border-top: 4px solid var(--neon-cyan-dark);
+        border-radius: 50%;
+        animation: spinHUD 0.8s linear infinite;
+    }
+
+    @keyframes spinHUD {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    .hud-loading-text {
+        font-size: 0.85rem;
+        color: var(--neon-cyan-dark);
+        font-weight: bold;
+        letter-spacing: 1px;
+    }
+
+    .hud-progress-bar {
+        width: 220px;
+        height: 4px;
+        background: #cbd5e1;
+        border-radius: 2px;
+        overflow: hidden;
+    }
+
+    .hud-progress-fill {
+        width: 100%;
+        height: 100%;
+        background: var(--neon-cyan-dark);
+        animation: loadingFill 1.2s ease-in-out infinite;
+    }
+
+    @keyframes loadingFill {
+        0% {
+            transform: translateX(-100%);
+        }
+
+        100% {
+            transform: translateX(100%);
+        }
     }
 
     .dashboard-cyber-wrapper {
@@ -382,31 +407,6 @@ $avatarTecnico = 'https://i.imgur.com/wHSp640.png'; // Avatar dummy tecnológico
         border-radius: 6px;
     }
 
-    .profile-avatar-wrapper {
-        position: relative;
-        width: 38px;
-        height: 38px;
-    }
-
-    .profile-avatar {
-        width: 100%;
-        height: 100%;
-        border-radius: 50%;
-        border: 1px solid var(--neon-cyan-dark);
-        background: #e2e8f0;
-    }
-
-    .online-indicator-dot {
-        position: absolute;
-        bottom: 0;
-        right: 0;
-        width: 8px;
-        height: 8px;
-        background: var(--neon-green-dark);
-        border-radius: 50%;
-        box-shadow: 0 0 6px var(--neon-green-dark);
-    }
-
     .profile-info-stack {
         display: flex;
         flex-direction: column;
@@ -437,6 +437,10 @@ $avatarTecnico = 'https://i.imgur.com/wHSp640.png'; // Avatar dummy tecnológico
         flex-direction: column;
     }
 
+    .profile-bahia-tag.border-left-cyan {
+        border-left: 2px solid var(--neon-cyan-dark);
+    }
+
     .profile-bahia-tag .tag-title {
         font-size: 0.65rem;
         color: var(--text-cyber-muted);
@@ -446,7 +450,6 @@ $avatarTecnico = 'https://i.imgur.com/wHSp640.png'; // Avatar dummy tecnológico
     .profile-bahia-tag .tag-val {
         font-size: 0.85rem;
         font-weight: bold;
-        color: var(--neon-purple-dark);
     }
 
     /* BARRA DE ACCIONES Y KPIS */
@@ -576,7 +579,6 @@ $avatarTecnico = 'https://i.imgur.com/wHSp640.png'; // Avatar dummy tecnológico
         animation: blink-animation 1s infinite;
     }
 
-    /* PANELES DE TABLA Y LAYOUT */
     .tec-workspace-layout {
         display: grid;
         grid-template-columns: 1.4fr 1fr;
@@ -827,7 +829,6 @@ $avatarTecnico = 'https://i.imgur.com/wHSp640.png'; // Avatar dummy tecnológico
         color: var(--neon-red-dark);
     }
 
-    /* ESTILOS DE TEXTO Y GLOW */
     .cyan-accent,
     .t-cyan,
     .text-neon-cyan {
@@ -902,30 +903,24 @@ $avatarTecnico = 'https://i.imgur.com/wHSp640.png'; // Avatar dummy tecnológico
     }
 </style>
 
+<!-- SCRIPT EN TIEMPO REAL PARA EL RELOJ DIGITAL -->
 <script>
-    function abrirGestionTrabajo(idRma) {
-        document.getElementById('modalIdRma').value = idRma;
-        document.getElementById('modalTituloRma').innerText = `// PROCESAR ORDEN EN BANCO: ${idRma}`;
-        document.getElementById('modalGestionTrabajo').style.display = 'flex';
-    }
+    (function actualizarReloj() {
+        function pad(n) { return n < 10 ? '0' + n : n; }
+        const ahora = new Date();
+        const dia = pad(ahora.getDate());
+        const mes = pad(ahora.getMonth() + 1);
+        const anio = ahora.getFullYear();
+        const horas = pad(ahora.getHours());
+        const minutos = pad(ahora.getMinutes());
+        const segundos = pad(ahora.getSeconds());
 
-    function cerrarModalGestion() {
-        document.getElementById('modalGestionTrabajo').style.display = 'none';
-    }
-
-    function imprimirTicketEquipo(idRma) {
-        alert(`[COLA DE IMPRESIÓN] Generando comprobante térmico de hardware de la orden: ${idRma}`);
-    }
-
-    function reimprimirEtiquetaRma(idRma) {
-        alert(`[MÓDULO QR] Re-imprimiendo código QR autoadhesivo para chasis: ${idRma}`);
-    }
-
-    document.getElementById('btnGuardarAvanceTecnico')?.addEventListener('click', function () {
-        const rma = document.getElementById('modalIdRma').value;
-        alert(`[TALLER] Avance de reparación consolidado con éxito en la orden ${rma}.`);
-        cerrarModalGestion();
-    });
+        const relojElem = document.getElementById('relojSistemaTecnico');
+        if (relojElem) {
+            relojElem.textContent = `${dia}/${mes}/${anio} ${horas}:${minutos}:${segundos}`;
+        }
+        setTimeout(actualizarReloj, 1000);
+    })();
 </script>
 
-<script src="vistas/js/tecnicos_laboratorio.js"></script>
+<script src="vistas/js/tecnico/perfil_tecnico.js"></script>
