@@ -70,8 +70,8 @@ $id_rol = $_SESSION['id_rol'] ?? null;
         <?php endif; ?>
 
         <!-- [04] GESTIÓN DE INVENTARIO Y STOCK -->
-        <?php if ($id_rol == 2): ?>
-            <!-- ADMIN: CONTROL Y KARDEX TOTAL -->
+        <?php if ($id_rol == 2 || $id_rol == 5): ?>
+            <!-- ADMIN Y ROL INVENTARIO: CONTROL Y KARDEX TOTAL -->
             <li class="nav-node-dropdown border-neon-orange">
                 <a href="#" class="node-trigger text-neon-orange">
                     <i class="fa fa-cubes"></i> [04] Inventario <i class="fa fa-caret-down node-arrow"></i>
@@ -144,7 +144,7 @@ $id_rol = $_SESSION['id_rol'] ?? null;
 </nav>
 
 <style>
-    /* BARRA DE NAVEGACIÓN - CONTRASTE MIDNIGHT COMMAND */
+    /* Estilos se mantienen intactos */
     .cyber-nav-hub {
         position: relative;
         margin: 15px 20px 25px 20px;
@@ -178,7 +178,6 @@ $id_rol = $_SESSION['id_rol'] ?? null;
         font-family: 'Share Tech Mono', monospace;
     }
 
-    /* ESTILOS DEL LOGO */
     .brand-node-logo {
         display: flex;
         align-items: center;
@@ -213,7 +212,6 @@ $id_rol = $_SESSION['id_rol'] ?? null;
         margin-right: 4px;
     }
 
-    /* BARRAS SEPARADORAS VERTICALES DE COLOR NEÓN */
     .nav-node-dropdown.border-neon-blue {
         border-left: 3px solid #38bdf8;
     }
@@ -234,7 +232,6 @@ $id_rol = $_SESSION['id_rol'] ?? null;
         border-left: 3px solid #c084fc;
     }
 
-    /* Colores Neón e Indicadores */
     .text-neon-blue {
         color: #38bdf8 !important;
     }
@@ -304,7 +301,6 @@ $id_rol = $_SESSION['id_rol'] ?? null;
         text-shadow: 0 0 8px currentColor;
     }
 
-    /* Ícono Flecha */
     .node-arrow {
         font-size: 0.75rem;
         margin-left: 4px;
@@ -317,7 +313,6 @@ $id_rol = $_SESSION['id_rol'] ?? null;
         opacity: 1;
     }
 
-    /* DROPDOWNS TERMINAL DE ALTO CONTRASTE CON PUENTE ANTI-PÉRDIDA */
     .dropdown-terminal {
         position: absolute;
         top: 100%;
@@ -381,7 +376,6 @@ $id_rol = $_SESSION['id_rol'] ?? null;
         margin-left: auto;
     }
 
-    /* Botón de Desconexión */
     .cerrar-sesion-cyber {
         color: #f87171 !important;
         border: 1px solid rgba(248, 113, 113, 0.3);

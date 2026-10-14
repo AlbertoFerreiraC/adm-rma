@@ -37,6 +37,8 @@ if (!$usuarioLogueado && !$esPublica) {
 if ($usuarioLogueado && $ruta === "login") {
     if ($idRol === 1) {
         $ruta = "perfil_tecnico";
+    } elseif ($idRol === 5) {
+        $ruta = "dashboardInventario";
     } else {
         $ruta = "dashboard";
     }
@@ -48,6 +50,9 @@ if ($usuarioLogueado) {
     }
     if ($idRol === 2 && $ruta === "perfil_tecnico") {
         $ruta = "dashboard";
+    }
+    if ($idRol === 5 && ($ruta === "inicio" || $ruta === "dashboard" || $ruta === "perfil_tecnico")) {
+        $ruta = "dashboardInventario";
     }
 }
 
@@ -141,6 +146,10 @@ $bodyClass = $sinMenuPrivado ? 'login-page' : 'hold-transition skin-blue layout-
             case "inicio":
             case "dashboard":
                 include __DIR__ . "/vistas/modulos/inicio/inicio.php";
+                break;
+
+            case "dashboardInventario":
+                include __DIR__ . "/vistas/modulos/inventario/dashboardInventario.php";
                 break;
 
             case "perfil_tecnico":

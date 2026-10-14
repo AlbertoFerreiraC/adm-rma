@@ -102,6 +102,7 @@ if (session_status() === PHP_SESSION_NONE) {
                     <select name="id_rol" id="usuario_rol" class="cyber-input" required>
                         <option value="1">Técnico</option>
                         <option value="2">Administrador</option>
+                        <option value="5">INVENTARIO</option>
                     </select>
                 </div>
             </div>
