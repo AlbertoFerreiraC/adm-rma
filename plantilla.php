@@ -57,6 +57,10 @@ if ($usuarioLogueado) {
 }
 
 $sinMenuPrivado = $esPublica;
+if ($usuarioLogueado && $idRol === 1 && in_array($ruta, ['stockCatalogo','stockAlertas','stockAsignaciones','stockMovimientos','dashboardInventario'], true)) {
+    header('Location: nuevaRemision');
+    exit;
+}
 ?>
 
 <!DOCTYPE html>
@@ -110,6 +114,8 @@ $bodyClass = $sinMenuPrivado ? 'login-page' : 'hold-transition skin-blue layout-
 ?>
 
 <body class="<?= $bodyClass ?>" style="background-color: #f0f4f8;">
+<?php if ($usuarioLogueado) { $_SESSION['rma_csrf'] = $_SESSION['rma_csrf'] ?? bin2hex(random_bytes(32)); } ?>
+<script>window.rmaCsrf = <?= json_encode($_SESSION['rma_csrf'] ?? '') ?>;</script>
 
     <?php if (!$sinMenuPrivado): ?>
         <div class="wrapper">
@@ -218,6 +224,10 @@ $bodyClass = $sinMenuPrivado ? 'login-page' : 'hold-transition skin-blue layout-
 
             case "stockMovimientos":
                 include __DIR__ . "/vistas/modulos/inventario/stockMovimientos.php";
+                break;
+            case "remisiones":
+            case "nuevaRemision":
+                include __DIR__ . "/vistas/modulos/inventario/remisiones.php";
                 break;
 
             case "slaProcesos":

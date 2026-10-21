@@ -112,14 +112,15 @@ if ($id_rol != 2 && $id_rol != 5) {
 
                 <div class="toolbar-actions">
                     <button type="button" class="btn-cyber-add" id="btnNuevaRemision">
-                        <i class="fa fa-file-text-o"></i> [+ NUEVA REMISIÓN]
+                        <i class="fa fa-file-text-o"></i> [GESTIONAR REMISIONES]
                     </button>
                     <button type="button" class="btn-cyber-add ml-2" id="btnRegistrarMovimiento">
-                        <i class="fa fa-exchange"></i> [MOVIMIENTO / REPOSICIÓN]
+                        <i class="fa fa-exchange"></i> [AJUSTAR STOCK]
                     </button>
                 </div>
             </div>
 
+            <div id="invMensaje" role="status" hidden></div>
             <!-- TABLA DE INVENTARIO -->
             <div class="panel-cyber-body-table mt-3">
                 <table class="cyber-mini-table font-mono" id="tablaStockInventario">
@@ -146,7 +147,46 @@ if ($id_rol != 2 && $id_rol != 5) {
     </section>
 </div>
 
+<dialog id="invEditar" class="inv-editor" aria-labelledby="invEditorTitulo">
+    <form id="invForm">
+        <div class="inv-editor-head"><div><h3 id="invEditorTitulo">Editar producto y existencias</h3><p>Inventario central · productos y stock reservado para RMA</p></div><button type="button" id="invCerrar" aria-label="Cerrar">&times;</button></div>
+        <div id="invError" role="alert" hidden></div>
+        <label for="invSeleccionar">Producto</label><select id="invSeleccionar" required></select>
+        <fieldset id="invCampos" disabled>
+            <div class="inv-editor-grid">
+                <div><label for="invCodigo">Código</label><input id="invCodigo" maxlength="50" required></div>
+                <div><label for="invNombre">Nombre del producto</label><input id="invNombre" maxlength="150" required></div>
+                <div><label for="invCategoria">Categoría</label><input id="invCategoria" maxlength="100" required></div>
+                <div><label for="invMarca">Marca</label><input id="invMarca" maxlength="100" required></div>
+                <div><label for="invActual">Stock actual (total físico)</label><input id="invActual" type="number" min="0" max="1000000000" step="1" required></div>
+                <div><label for="invRma">Stock reservado para RMA</label><input id="invRma" type="number" min="0" max="1000000000" step="1" required></div>
+                <div><label for="invMinimo">Stock mínimo</label><input id="invMinimo" type="number" min="0" max="1000000000" step="1" required></div>
+                <div><label for="invDisponible">Disponible (actual menos reservado)</label><output id="invDisponible">0</output></div>
+            </div>
+            <label for="invMotivo">Motivo del ajuste</label><textarea id="invMotivo" rows="3" maxlength="2000" required placeholder="Ej.: conteo físico, ingreso de mercadería o corrección de reserva"></textarea>
+            <p class="inv-editor-note">El ajuste queda registrado con tu usuario, el motivo y las existencias anteriores y nuevas.</p>
+        </fieldset>
+        <div class="inv-editor-actions"><button type="button" id="invCancelar">Cancelar</button><button id="invGuardar" type="submit" disabled>Guardar cambios</button></div>
+    </form>
+</dialog>
 <style>
+    .inv-editor {width:min(760px,94vw);box-sizing:border-box;max-height:90vh;overflow:auto;border:1px solid #cbd5e1;border-radius:12px;padding:25px;background:white;color:#0f172a;font:14px Arial,sans-serif}
+    .inv-editor::backdrop {background:#0f172a99}
+    .inv-editor-head {display:flex;justify-content:space-between;gap:15px;align-items:flex-start;margin-bottom:20px}
+    .inv-editor-head h3 {margin:0 0 8px;font-size:22px}
+    .inv-editor-head p,.inv-editor-note {color:#64748b;font-size:12px;line-height:1.5}
+    .inv-editor-grid {display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0}
+    .inv-editor label {display:block;font-weight:600;margin-bottom:6px}
+    .inv-editor input,.inv-editor select,.inv-editor textarea,.inv-editor output {display:block;width:100%;box-sizing:border-box;border:1px solid #cbd5e1;border-radius:5px;padding:10px;background:#fff;font:14px Arial,sans-serif;min-height:39px}
+    .inv-editor output {background:#f1f5f9;font-weight:700}
+    .inv-editor fieldset {border:0;padding:0;margin:0}
+    .inv-editor-actions {position:sticky;bottom:0;display:flex;justify-content:flex-end;gap:10px;margin-top:20px;padding:12px 0 0;background:#fff;border-top:1px solid #e2e8f0}
+    .inv-editor button {cursor:pointer;border:1px solid #cbd5e1;border-radius:5px;padding:10px 16px;background:#fff;color:#334155;font-weight:600}
+    #invGuardar {background:#0369a1;color:white;border-color:#0369a1}
+    .inv-editor button:disabled {opacity:.5;cursor:wait}
+    #invError,#invMensaje {padding:12px 15px;border-radius:6px;margin:12px 0;background:#dcfce7;color:#166534}
+    #invError {background:#fee2e2;color:#991b1b}
+    @media(max-width:600px) {.inv-editor-grid {grid-template-columns:1fr}.inv-editor {padding:18px}}
     @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@500;600;700&display=swap');
 
     :root {
@@ -522,4 +562,4 @@ if ($id_rol != 2 && $id_rol != 5) {
     }
 </style>
 
-<script src="vistas/js/inventario/dashboardInventario.js"></script>
+<script src="vistas/js/inventario/dashboardInventario.js?v=<?= filemtime(__DIR__ . '/../../js/inventario/dashboardInventario.js') ?>"></script>

@@ -39,7 +39,8 @@
                 renderizarKPIs(data.kpis);
                 renderizarMaquinasProceso(data.casos_proceso);
                 renderizarDespachosRecientes(data.casos_despachados);
-                poblarSelectsModal(data.estados_caso, data.stock_insumos);
+                poblarSelectsModal(data.estados_caso, []);
+                const casoSel=document.getElementById('solicitudCaso'); if(casoSel) casoSel.innerHTML=(data.casos_proceso||[]).map(c=>`<option value="${c.id}">${escapeHtml(c.numero_caso)} - ${escapeHtml(c.equipo)}</option>`).join('');
             } else {
                 console.error("🔴 Error API Perfil Técnico:", data.message);
             }
@@ -185,7 +186,7 @@
     document.getElementById("btnGuardarAvanceTecnico")?.addEventListener("click", async function () {
         const idCaso = document.getElementById('modalIdRma').value;
         const idEstado = document.getElementById('selectEstadoRma').value;
-        const idInsumo = document.getElementById('selectInsumoTaller').value;
+        const idInsumo = '';
         const diagnostico = document.getElementById('txtDetalleTecnico').value.trim();
 
         if (!diagnostico) {
@@ -203,7 +204,7 @@
             formData.append("diagnostico", diagnostico);
             formData.append("id_tecnico", idTecnico || '');
 
-            const res = await fetch(API_TECNICO, { method: "POST", body: formData });
+            const res = await fetch(API_TECNICO, { method: "POST", body: formData, headers: {'X-CSRF-TOKEN':window.rmaCsrf} });
             const data = await res.json();
 
             if (data.status === "success") {
@@ -220,6 +221,8 @@
             ocultarLoader();
         }
     });
+
+    document.getElementById('btnSolicitarRemision')?.addEventListener('click',()=>window.location.href='nuevaRemision');
 
     function escapeHtml(str) {
         return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");

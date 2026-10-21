@@ -77,7 +77,9 @@ $id_rol = $_SESSION['id_rol'] ?? null;
                     <i class="fa fa-cubes"></i> [04] Inventario <i class="fa fa-caret-down node-arrow"></i>
                 </a>
                 <ul class="dropdown-terminal">
-                    <li><a href="stockCatalogo"><span class="t-orange">//</span> CATÁLOGO Y CONTROL DE STOCK</a></li>
+                    <li><a href="remisiones"><span class="t-orange">//</span> NOTAS DE REMISIÓN</a></li>
+                    <li><a href="dashboardInventario"><span class="t-orange">//</span> PRODUCTOS Y STOCK CENTRAL</a></li>
+                    <li><a href="stockCatalogo"><span class="t-orange">//</span> INSUMOS DEL TALLER RMA</a></li>
                     <li><a href="stockAlertas"><span class="t-orange">//</span> ALERTAS DE STOCK CRÍTICO</a></li>
                     <li><a href="stockAsignaciones"><span class="t-orange">//</span> ASIGNACIONES EN TALLER</a></li>
                     <li><a href="stockMovimientos"><span class="t-orange">//</span> KARDEX DE MOVIMIENTOS</a></li>
@@ -87,11 +89,11 @@ $id_rol = $_SESSION['id_rol'] ?? null;
             <!-- TÉCNICO: CONSULTA DE REPUESTOS Y ASIGNACIÓN A CASOS -->
             <li class="nav-node-dropdown border-neon-orange">
                 <a href="#" class="node-trigger text-neon-orange">
-                    <i class="fa fa-cubes"></i> [04] Insumos <i class="fa fa-caret-down node-arrow"></i>
+                    <i class="fa fa-file-text-o"></i> [04] Remisiones <i class="fa fa-caret-down node-arrow"></i>
                 </a>
                 <ul class="dropdown-terminal">
-                    <li><a href="stockCatalogo"><span class="t-orange">//</span> CONSULTA DE REPUESTOS</a></li>
-                    <li><a href="stockAsignaciones"><span class="t-orange">//</span> APLICAR INSUMOS A CASOS</a></li>
+                    <li><a href="nuevaRemision"><span class="t-orange">//</span> AGREGAR REMISIÓN</a></li>
+                    <li><a href="remisiones"><span class="t-orange">//</span> MIS REMISIONES</a></li>
                 </ul>
             </li>
         <?php endif; ?>

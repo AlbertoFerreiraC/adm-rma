@@ -63,6 +63,8 @@ $avatarTecnico = 'vistas/img/plantilla/icono.png'; // Avatar por defecto del sis
             <i class="fa fa-plus-circle"></i> INGRESO NUEVO RMA (NUEVA ORDEN)
         </a>
         <div class="tec-utility-buttons">
+            <button type="button" class="btn-terminal-edit" id="btnSolicitarRemision"><i class="fa fa-file-text-o"></i> SOLICITAR NOTA DE REMISIÓN</button>
+            <a class="btn-terminal-view" href="remisiones"><i class="fa fa-list"></i> MIS REMISIONES</a>
             <button type="button" class="btn-terminal-edit" id="btnReimprimirQrGlobal"
                 onclick="solicitarImpresionGlobal('qr')">
                 <i class="fa fa-qrcode"></i> REIMPRIMIR CÓDIGO QR
@@ -205,18 +207,11 @@ $avatarTecnico = 'vistas/img/plantilla/icono.png'; // Avatar por defecto del sis
                 <input type="hidden" id="modalIdRma">
                 <input type="hidden" id="modalNumCasoRma">
 
-                <div class="cyber-form-group-row mb-3"
-                    style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div class="cyber-form-group-row mb-3">
                     <div class="cyber-form-group">
                         <label class="node-label">ESTADO DEL EQUIPO EN BANCO</label>
                         <select id="selectEstadoRma" class="cyber-input">
                             <!-- Carga dinámica desde la BD -->
-                        </select>
-                    </div>
-                    <div class="cyber-form-group">
-                        <label class="node-label">INSUMO EN STOCK A APLICAR</label>
-                        <select id="selectInsumoTaller" class="cyber-input">
-                            <!-- Carga dinámica del stock -->
                         </select>
                     </div>
                 </div>
@@ -923,4 +918,4 @@ $avatarTecnico = 'vistas/img/plantilla/icono.png'; // Avatar por defecto del sis
     })();
 </script>
 
-<script src="vistas/js/tecnico/perfil_tecnico.js"></script>
+<script src="vistas/js/tecnico/perfil_tecnico.js?v=<?= filemtime(__DIR__ . '/../../js/tecnico/perfil_tecnico.js') ?>"></script>
